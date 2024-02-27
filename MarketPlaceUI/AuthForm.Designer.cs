@@ -28,31 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
-            buttonOk = new Button();
+            components = new System.ComponentModel.Container();
+            buttonRegOk = new Button();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
-            textBox3 = new TextBox();
-            textBox4 = new TextBox();
-            checkBox1 = new CheckBox();
-            button1 = new Button();
+            textBoxAuthUserName = new TextBox();
+            textBoxAuthPassword = new TextBox();
+            checkBoxStayLogedIn = new CheckBox();
+            buttonAuthOk = new Button();
             tabPage2 = new TabPage();
             linkLabelPolicy = new LinkLabel();
             checkBoxPolicy = new CheckBox();
-            textBox2 = new TextBox();
-            textBox1 = new TextBox();
+            textBoxRegUserName = new TextBox();
+            textBoxRegUserPassword = new TextBox();
+            errorProviderReg = new ErrorProvider(components);
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProviderReg).BeginInit();
             SuspendLayout();
             // 
-            // buttonOk
+            // buttonRegOk
             // 
-            buttonOk.Location = new Point(64, 167);
-            buttonOk.Name = "buttonOk";
-            buttonOk.Size = new Size(217, 42);
-            buttonOk.TabIndex = 0;
-            buttonOk.Text = "Ok";
-            buttonOk.UseVisualStyleBackColor = true;
+            buttonRegOk.BackColor = Color.SkyBlue;
+            buttonRegOk.FlatAppearance.BorderSize = 0;
+            buttonRegOk.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
+            buttonRegOk.FlatStyle = FlatStyle.Flat;
+            buttonRegOk.Location = new Point(64, 167);
+            buttonRegOk.Name = "buttonRegOk";
+            buttonRegOk.Size = new Size(217, 42);
+            buttonRegOk.TabIndex = 0;
+            buttonRegOk.Text = "Ok";
+            buttonRegOk.UseVisualStyleBackColor = false;
+            buttonRegOk.Click += buttonRegOk_Click;
             // 
             // tabControl1
             // 
@@ -66,10 +74,10 @@
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(textBox3);
-            tabPage1.Controls.Add(textBox4);
-            tabPage1.Controls.Add(checkBox1);
-            tabPage1.Controls.Add(button1);
+            tabPage1.Controls.Add(textBoxAuthUserName);
+            tabPage1.Controls.Add(textBoxAuthPassword);
+            tabPage1.Controls.Add(checkBoxStayLogedIn);
+            tabPage1.Controls.Add(buttonAuthOk);
             tabPage1.Location = new Point(4, 34);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
@@ -78,50 +86,55 @@
             tabPage1.Text = "Authorization";
             tabPage1.UseVisualStyleBackColor = true;
             // 
-            // textBox3
+            // textBoxAuthUserName
             // 
-            textBox3.Location = new Point(21, 30);
-            textBox3.Name = "textBox3";
-            textBox3.PlaceholderText = "Username";
-            textBox3.Size = new Size(303, 33);
-            textBox3.TabIndex = 3;
+            textBoxAuthUserName.Location = new Point(21, 30);
+            textBoxAuthUserName.Name = "textBoxAuthUserName";
+            textBoxAuthUserName.PlaceholderText = "Username";
+            textBoxAuthUserName.Size = new Size(303, 33);
+            textBoxAuthUserName.TabIndex = 3;
             // 
-            // textBox4
+            // textBoxAuthPassword
             // 
-            textBox4.Location = new Point(21, 83);
-            textBox4.Name = "textBox4";
-            textBox4.PasswordChar = '*';
-            textBox4.PlaceholderText = "Password";
-            textBox4.Size = new Size(303, 33);
-            textBox4.TabIndex = 5;
+            textBoxAuthPassword.Location = new Point(21, 83);
+            textBoxAuthPassword.Name = "textBoxAuthPassword";
+            textBoxAuthPassword.PasswordChar = '*';
+            textBoxAuthPassword.PlaceholderText = "Password";
+            textBoxAuthPassword.Size = new Size(303, 33);
+            textBoxAuthPassword.TabIndex = 5;
             // 
-            // checkBox1
+            // checkBoxStayLogedIn
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.FlatStyle = FlatStyle.Flat;
-            checkBox1.Location = new Point(189, 122);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(135, 29);
-            checkBox1.TabIndex = 6;
-            checkBox1.Text = "stay loged in";
-            checkBox1.UseVisualStyleBackColor = true;
+            checkBoxStayLogedIn.AutoSize = true;
+            checkBoxStayLogedIn.FlatStyle = FlatStyle.Flat;
+            checkBoxStayLogedIn.Location = new Point(189, 122);
+            checkBoxStayLogedIn.Name = "checkBoxStayLogedIn";
+            checkBoxStayLogedIn.Size = new Size(135, 29);
+            checkBoxStayLogedIn.TabIndex = 6;
+            checkBoxStayLogedIn.Text = "stay loged in";
+            checkBoxStayLogedIn.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // buttonAuthOk
             // 
-            button1.Location = new Point(64, 167);
-            button1.Name = "button1";
-            button1.Size = new Size(217, 42);
-            button1.TabIndex = 4;
-            button1.Text = "Ok";
-            button1.UseVisualStyleBackColor = true;
+            buttonAuthOk.BackColor = Color.SkyBlue;
+            buttonAuthOk.FlatAppearance.BorderSize = 0;
+            buttonAuthOk.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
+            buttonAuthOk.FlatStyle = FlatStyle.Flat;
+            buttonAuthOk.Location = new Point(64, 167);
+            buttonAuthOk.Name = "buttonAuthOk";
+            buttonAuthOk.Size = new Size(217, 42);
+            buttonAuthOk.TabIndex = 4;
+            buttonAuthOk.Text = "Ok";
+            buttonAuthOk.UseVisualStyleBackColor = false;
+            buttonAuthOk.Click += buttonAuthOk_Click;
             // 
             // tabPage2
             // 
             tabPage2.Controls.Add(linkLabelPolicy);
             tabPage2.Controls.Add(checkBoxPolicy);
-            tabPage2.Controls.Add(textBox2);
-            tabPage2.Controls.Add(textBox1);
-            tabPage2.Controls.Add(buttonOk);
+            tabPage2.Controls.Add(textBoxRegUserName);
+            tabPage2.Controls.Add(textBoxRegUserPassword);
+            tabPage2.Controls.Add(buttonRegOk);
             tabPage2.Location = new Point(4, 34);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
@@ -151,28 +164,35 @@
             checkBoxPolicy.Text = "accept";
             checkBoxPolicy.UseVisualStyleBackColor = true;
             // 
-            // textBox2
+            // textBoxRegUserName
             // 
-            textBox2.Location = new Point(21, 30);
-            textBox2.Name = "textBox2";
-            textBox2.PlaceholderText = "Username";
-            textBox2.Size = new Size(303, 33);
-            textBox2.TabIndex = 0;
+            textBoxRegUserName.Location = new Point(21, 30);
+            textBoxRegUserName.Name = "textBoxRegUserName";
+            textBoxRegUserName.PlaceholderText = "Username";
+            textBoxRegUserName.Size = new Size(303, 33);
+            textBoxRegUserName.TabIndex = 0;
+            textBoxRegUserName.Enter += textBoxRegUserName_Enter;
             // 
-            // textBox1
+            // textBoxRegUserPassword
             // 
-            textBox1.Location = new Point(21, 83);
-            textBox1.Name = "textBox1";
-            textBox1.PasswordChar = '*';
-            textBox1.PlaceholderText = "Password";
-            textBox1.Size = new Size(303, 33);
-            textBox1.TabIndex = 1;
+            textBoxRegUserPassword.Location = new Point(21, 83);
+            textBoxRegUserPassword.Name = "textBoxRegUserPassword";
+            textBoxRegUserPassword.PasswordChar = '*';
+            textBoxRegUserPassword.PlaceholderText = "Password";
+            textBoxRegUserPassword.Size = new Size(303, 33);
+            textBoxRegUserPassword.TabIndex = 1;
+            textBoxRegUserPassword.Enter += textBoxRegUserPassword_Enter;
+            // 
+            // errorProviderReg
+            // 
+            errorProviderReg.BlinkStyle = ErrorBlinkStyle.NeverBlink;
+            errorProviderReg.ContainerControl = this;
             // 
             // AuthForm
             // 
             AutoScaleDimensions = new SizeF(11F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.White;
+            BackColor = Color.Azure;
             ClientSize = new Size(377, 302);
             Controls.Add(tabControl1);
             Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
@@ -186,21 +206,23 @@
             tabPage1.PerformLayout();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProviderReg).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
-        private Button buttonOk;
+        private Button buttonRegOk;
         private TabControl tabControl1;
         private TabPage tabPage1;
         private TabPage tabPage2;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private TextBox textBox3;
-        private TextBox textBox4;
-        private CheckBox checkBox1;
-        private Button button1;
+        private TextBox textBoxRegUserPassword;
+        private TextBox textBoxRegUserName;
+        private TextBox textBoxAuthUserName;
+        private TextBox textBoxAuthPassword;
+        private CheckBox checkBoxStayLogedIn;
+        private Button buttonAuthOk;
         private CheckBox checkBoxPolicy;
         private LinkLabel linkLabelPolicy;
+        private ErrorProvider errorProviderReg;
     }
 }
