@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketPlaceUI", "MarketPlaceUI\MarketPlaceUI.csproj", "{4EECF552-13AF-4A07-ADFC-5B7D7270705F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarketPlaceUI", "MarketPlaceUI\MarketPlaceUI.csproj", "{4EECF552-13AF-4A07-ADFC-5B7D7270705F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketPlaceLibrary", "MarketPlaceLibrary\MarketPlaceLibrary.csproj", "{91360F8C-F737-46D3-87BB-F5EDDD6D225D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{4EECF552-13AF-4A07-ADFC-5B7D7270705F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EECF552-13AF-4A07-ADFC-5B7D7270705F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EECF552-13AF-4A07-ADFC-5B7D7270705F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91360F8C-F737-46D3-87BB-F5EDDD6D225D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91360F8C-F737-46D3-87BB-F5EDDD6D225D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91360F8C-F737-46D3-87BB-F5EDDD6D225D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91360F8C-F737-46D3-87BB-F5EDDD6D225D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

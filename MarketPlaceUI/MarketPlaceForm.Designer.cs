@@ -51,7 +51,7 @@
             // 
             // panelMenuLeft
             // 
-            panelMenuLeft.BackColor = SystemColors.ActiveCaption;
+            panelMenuLeft.BackColor = Color.Azure;
             panelMenuLeft.Controls.Add(buttonAuth);
             panelMenuLeft.Controls.Add(buttonHistory);
             panelMenuLeft.Controls.Add(buttonFavorite);
@@ -68,12 +68,16 @@
             // 
             // buttonAuth
             // 
-            buttonAuth.Location = new Point(50, 505);
+            buttonAuth.BackColor = Color.SkyBlue;
+            buttonAuth.FlatAppearance.BorderSize = 0;
+            buttonAuth.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
+            buttonAuth.FlatStyle = FlatStyle.Flat;
+            buttonAuth.Location = new Point(53, 481);
             buttonAuth.Name = "buttonAuth";
             buttonAuth.Size = new Size(107, 44);
             buttonAuth.TabIndex = 0;
             buttonAuth.Text = "Auth";
-            buttonAuth.UseVisualStyleBackColor = true;
+            buttonAuth.UseVisualStyleBackColor = false;
             buttonAuth.Click += buttonAuth_Click;
             // 
             // buttonHistory
