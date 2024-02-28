@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MarketPlaceForm));
             panelMenuLeft = new Panel();
             buttonAuth = new Button();
             buttonHistory = new Button();
@@ -42,6 +43,7 @@
             buttonMails = new Button();
             panelContent = new Panel();
             flowLayoutPanel1 = new FlowLayoutPanel();
+            button1 = new Button();
             panelMenuLeft.SuspendLayout();
             panelHeader.SuspendLayout();
             panelContent.SuspendLayout();
@@ -226,6 +228,7 @@
             // panelContent
             // 
             panelContent.BackColor = SystemColors.ActiveBorder;
+            panelContent.Controls.Add(button1);
             panelContent.Controls.Add(flowLayoutPanel1);
             panelContent.Dock = DockStyle.Fill;
             panelContent.Location = new Point(220, 40);
@@ -239,6 +242,16 @@
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new Size(222, 127);
             flowLayoutPanel1.TabIndex = 0;
+            // 
+            // button1
+            // 
+            button1.Image = (Image)resources.GetObject("button1.Image");
+            button1.Location = new Point(417, 288);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 67);
+            button1.TabIndex = 1;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
             // 
             // MarketPlaceForm
             // 
@@ -276,5 +289,6 @@
         private Button buttonAuth;
         private Panel panelHeaderControls;
         private FlowLayoutPanel flowLayoutPanel1;
+        private Button button1;
     }
 }
