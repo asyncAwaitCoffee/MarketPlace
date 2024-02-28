@@ -32,14 +32,14 @@
             buttonRegOk = new Button();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
-            textBoxAuthUserName = new TextBox();
-            textBoxAuthPassword = new TextBox();
-            checkBoxStayLogedIn = new CheckBox();
+            textBoxAuthUserLogin = new TextBox();
+            textBoxAuthUserPassword = new TextBox();
+            checkBoxStayLoggedIn = new CheckBox();
             buttonAuthOk = new Button();
             tabPage2 = new TabPage();
             linkLabelPolicy = new LinkLabel();
             checkBoxPolicy = new CheckBox();
-            textBoxRegUserName = new TextBox();
+            textBoxRegUserLogin = new TextBox();
             textBoxRegUserPassword = new TextBox();
             errorProviderReg = new ErrorProvider(components);
             tabControl1.SuspendLayout();
@@ -74,9 +74,9 @@
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(textBoxAuthUserName);
-            tabPage1.Controls.Add(textBoxAuthPassword);
-            tabPage1.Controls.Add(checkBoxStayLogedIn);
+            tabPage1.Controls.Add(textBoxAuthUserLogin);
+            tabPage1.Controls.Add(textBoxAuthUserPassword);
+            tabPage1.Controls.Add(checkBoxStayLoggedIn);
             tabPage1.Controls.Add(buttonAuthOk);
             tabPage1.Location = new Point(4, 34);
             tabPage1.Name = "tabPage1";
@@ -86,33 +86,33 @@
             tabPage1.Text = "Authorization";
             tabPage1.UseVisualStyleBackColor = true;
             // 
-            // textBoxAuthUserName
+            // textBoxAuthUserLogin
             // 
-            textBoxAuthUserName.Location = new Point(21, 30);
-            textBoxAuthUserName.Name = "textBoxAuthUserName";
-            textBoxAuthUserName.PlaceholderText = "Username";
-            textBoxAuthUserName.Size = new Size(303, 33);
-            textBoxAuthUserName.TabIndex = 3;
+            textBoxAuthUserLogin.Location = new Point(21, 30);
+            textBoxAuthUserLogin.Name = "textBoxAuthUserLogin";
+            textBoxAuthUserLogin.PlaceholderText = "Username";
+            textBoxAuthUserLogin.Size = new Size(303, 33);
+            textBoxAuthUserLogin.TabIndex = 3;
             // 
-            // textBoxAuthPassword
+            // textBoxAuthUserPassword
             // 
-            textBoxAuthPassword.Location = new Point(21, 83);
-            textBoxAuthPassword.Name = "textBoxAuthPassword";
-            textBoxAuthPassword.PasswordChar = '*';
-            textBoxAuthPassword.PlaceholderText = "Password";
-            textBoxAuthPassword.Size = new Size(303, 33);
-            textBoxAuthPassword.TabIndex = 5;
+            textBoxAuthUserPassword.Location = new Point(21, 83);
+            textBoxAuthUserPassword.Name = "textBoxAuthUserPassword";
+            textBoxAuthUserPassword.PasswordChar = '*';
+            textBoxAuthUserPassword.PlaceholderText = "Password";
+            textBoxAuthUserPassword.Size = new Size(303, 33);
+            textBoxAuthUserPassword.TabIndex = 5;
             // 
-            // checkBoxStayLogedIn
+            // checkBoxStayLoggedIn
             // 
-            checkBoxStayLogedIn.AutoSize = true;
-            checkBoxStayLogedIn.FlatStyle = FlatStyle.Flat;
-            checkBoxStayLogedIn.Location = new Point(189, 122);
-            checkBoxStayLogedIn.Name = "checkBoxStayLogedIn";
-            checkBoxStayLogedIn.Size = new Size(135, 29);
-            checkBoxStayLogedIn.TabIndex = 6;
-            checkBoxStayLogedIn.Text = "stay loged in";
-            checkBoxStayLogedIn.UseVisualStyleBackColor = true;
+            checkBoxStayLoggedIn.AutoSize = true;
+            checkBoxStayLoggedIn.FlatStyle = FlatStyle.Flat;
+            checkBoxStayLoggedIn.Location = new Point(189, 122);
+            checkBoxStayLoggedIn.Name = "checkBoxStayLoggedIn";
+            checkBoxStayLoggedIn.Size = new Size(146, 29);
+            checkBoxStayLoggedIn.TabIndex = 6;
+            checkBoxStayLoggedIn.Text = "stay logged in";
+            checkBoxStayLoggedIn.UseVisualStyleBackColor = true;
             // 
             // buttonAuthOk
             // 
@@ -132,7 +132,7 @@
             // 
             tabPage2.Controls.Add(linkLabelPolicy);
             tabPage2.Controls.Add(checkBoxPolicy);
-            tabPage2.Controls.Add(textBoxRegUserName);
+            tabPage2.Controls.Add(textBoxRegUserLogin);
             tabPage2.Controls.Add(textBoxRegUserPassword);
             tabPage2.Controls.Add(buttonRegOk);
             tabPage2.Location = new Point(4, 34);
@@ -152,6 +152,7 @@
             linkLabelPolicy.TabIndex = 4;
             linkLabelPolicy.TabStop = true;
             linkLabelPolicy.Text = "Policy";
+            linkLabelPolicy.Click += linkLabelPolicy_Click;
             // 
             // checkBoxPolicy
             // 
@@ -164,14 +165,14 @@
             checkBoxPolicy.Text = "accept";
             checkBoxPolicy.UseVisualStyleBackColor = true;
             // 
-            // textBoxRegUserName
+            // textBoxRegUserLogin
             // 
-            textBoxRegUserName.Location = new Point(21, 30);
-            textBoxRegUserName.Name = "textBoxRegUserName";
-            textBoxRegUserName.PlaceholderText = "Username";
-            textBoxRegUserName.Size = new Size(303, 33);
-            textBoxRegUserName.TabIndex = 0;
-            textBoxRegUserName.Enter += textBoxRegUserName_Enter;
+            textBoxRegUserLogin.Location = new Point(21, 30);
+            textBoxRegUserLogin.Name = "textBoxRegUserLogin";
+            textBoxRegUserLogin.PlaceholderText = "Username";
+            textBoxRegUserLogin.Size = new Size(303, 33);
+            textBoxRegUserLogin.TabIndex = 0;
+            textBoxRegUserLogin.Enter += textBoxRegUserName_Enter;
             // 
             // textBoxRegUserPassword
             // 
@@ -216,10 +217,10 @@
         private TabPage tabPage1;
         private TabPage tabPage2;
         private TextBox textBoxRegUserPassword;
-        private TextBox textBoxRegUserName;
-        private TextBox textBoxAuthUserName;
-        private TextBox textBoxAuthPassword;
-        private CheckBox checkBoxStayLogedIn;
+        private TextBox textBoxRegUserLogin;
+        private TextBox textBoxAuthUserLogin;
+        private TextBox textBoxAuthUserPassword;
+        private CheckBox checkBoxStayLoggedIn;
         private Button buttonAuthOk;
         private CheckBox checkBoxPolicy;
         private LinkLabel linkLabelPolicy;

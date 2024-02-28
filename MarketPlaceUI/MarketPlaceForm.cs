@@ -1,3 +1,6 @@
+using MarketPlaceLibrary;
+using MarketPlaceLibrary.Models;
+using MarketPlaceUI.FormsUI;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -22,56 +25,101 @@ namespace MarketPlaceUI
 
         }
 
-        private void buttonBrowse_Click(object sender, EventArgs e)
+        private async void buttonBrowse_Click(object sender, EventArgs e)
         {
             panelContent.Controls.Clear();
 
             FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
 
-            flowLayoutPanel.BackColor = Color.Green;
+            flowLayoutPanel.BackColor = Color.CornflowerBlue;
             flowLayoutPanel.Location = new Point(0, 0);
             flowLayoutPanel.Dock = DockStyle.Fill;
             flowLayoutPanel.Name = "flowLayoutPanel2";
             flowLayoutPanel.Visible = true;
             flowLayoutPanel.AutoScroll = true;
+            flowLayoutPanel.AutoSize = true;
+            flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
-            for (int i = 0; i < 10; i++)
+            List<MarketItem> marketItems = await DataAccess.GetMarketItems(1, 20, 1);
+
+
+            foreach (MarketItem marketItem in marketItems)
             {
                 Panel panel = new Panel();
                 panel.Size = new Size(300, 300);
 
                 PictureBox pictureBox = new PictureBox();
                 pictureBox.BackColor = Color.PeachPuff;
-                pictureBox.Size = new Size(300, 150);
+                pictureBox.Size = new Size(300, 200);
+
 
                 Label label = new Label();
-                label.Text = $"Item #{i}";
+                label.Text = marketItem.Title;
                 label.Top = pictureBox.Height - label.Height;
                 label.Left = 0;
                 label.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+                label.BackColor = Color.Transparent;
+
+                // TODO - simplify?
+                Task.Run(() =>
+                {
+                    pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                    pictureBox.Image = LoadImageAsync(marketItem.Id).Result;
+                });
+
 
                 pictureBox.Controls.Add(label);
 
                 TableLayoutPanel panelInner = new TableLayoutPanel();
-                panelInner.BackColor = Color.LightPink;
-                panelInner.Size = new Size(300, 150);
+                panelInner.BackColor = Color.Blue;
+                panelInner.Size = new Size(300, 100);
                 panelInner.Dock = DockStyle.Bottom;
                 panelInner.ColumnCount = 1;
                 panelInner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
                 panelInner.RowCount = 2;
-                panelInner.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-                panelInner.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+                panelInner.RowStyles.Add(new RowStyle(SizeType.Absolute, 60));
+                panelInner.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
 
                 TextBox textBox = new TextBox();
                 textBox.Multiline = true;
-                textBox.ScrollBars = ScrollBars.Vertical;
+                textBox.Location = new Point(0, 0);
+                //textBox.ScrollBars = ScrollBars.Vertical;
                 textBox.BackColor = Color.WhiteSmoke;
+                textBox.BorderStyle = BorderStyle.None;
                 textBox.Dock = DockStyle.Fill;
+                //textBox.Size = new Size(300, 200);
                 textBox.Margin = new Padding(0);
-                textBox.Text = $"A really long description for the Item #{i}, where everything is mentioned. It could be small or very large.";
+                textBox.Text = marketItem.Description;
                 textBox.ReadOnly = true;
 
+                Panel controlWrapperPanel = new Panel();
+                controlWrapperPanel.Dock = DockStyle.Fill;
+                controlWrapperPanel.Padding = new Padding(5, 0, 5, 0);
+
+                FlowLayoutPanel panelControlsLeft = new FlowLayoutPanel();
+                panelControlsLeft.Dock = DockStyle.Left;
+                panelControlsLeft.FlowDirection = FlowDirection.LeftToRight;
+                Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", "Info", ButtonSize.Tiny, new Point(0, 0));
+                Button buttonFav = ButtonFactory.BuildButton("buttonFav", "Fav", ButtonSize.Tiny, new Point(0, 0));
+                
+                buttonInfo.Click += (object sender, EventArgs e) => { ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog(); };
+
+                panelControlsLeft.Controls.AddRange([buttonInfo, buttonFav]);
+
+                FlowLayoutPanel panelControlsRight = new FlowLayoutPanel();
+                panelControlsRight.Dock = DockStyle.Right;
+                panelControlsRight.FlowDirection = FlowDirection.RightToLeft;
+                Button buttonBid = ButtonFactory.BuildButton("buttonBid", "Bid", ButtonSize.Tiny, new Point(0,0));
+                Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", "Buy", ButtonSize.Tiny, new Point(0, 0));
+
+
+                panelControlsRight.Controls.AddRange([buttonBuy, buttonBid]);
+
+                controlWrapperPanel.Controls.Add(panelControlsLeft);
+                controlWrapperPanel.Controls.Add(panelControlsRight);
+
                 panelInner.Controls.Add(textBox);
+                panelInner.Controls.Add(controlWrapperPanel);
 
                 panel.Controls.Add(pictureBox);
                 panel.Controls.Add(panelInner);
@@ -104,6 +152,10 @@ namespace MarketPlaceUI
 
             panelContent.Controls.Add(dataGridView);
 
+            Button addItemButton = ButtonFactory.BuildButton("addItemButton", "Add item", ButtonSize.Small, new Point(0, 0));
+            addItemButton.Click += addItemButton_Click;
+
+            panelHeaderControls.Controls.Add(addItemButton);
         }
 
         private void buttonFavorite_Click(object sender, EventArgs e)
@@ -175,6 +227,37 @@ namespace MarketPlaceUI
         {
             AuthForm authForm = new AuthForm();
             authForm.ShowDialog();
+        }
+
+        private void addItemButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files (*.jpg; *.jpeg; *.png; *.gif; *.bmp)|*.jpg; *.jpeg; *.png; *.gif; *.bmp|All files (*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string imagePath = openFileDialog.FileName;
+
+                DataAccess.SaveImageToDatabase(imagePath);
+            }
+        }
+
+        // TODO - for all controls?
+        private async Task<Image> LoadImageAsync(int id)
+        {
+            byte[] imageData = await DataAccess.RetrieveImageFromDatabase(id);
+
+            TaskCompletionSource<Image> tcs = new TaskCompletionSource<Image>();
+
+            await Task.Run(() =>
+            {
+                using (MemoryStream ms = new MemoryStream(imageData))
+                {
+                    tcs.SetResult(Image.FromStream(ms));
+                }
+            });
+
+            return await tcs.Task;
         }
     }
 }
