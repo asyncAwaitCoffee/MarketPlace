@@ -37,16 +37,14 @@
             buttonMenuMain = new Button();
             panel1 = new Panel();
             panelHeader = new Panel();
+            panelHeaderControls = new Panel();
             buttonCart = new Button();
             buttonMails = new Button();
             panelContent = new Panel();
-            richTextBox1 = new RichTextBox();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            textBox1 = new TextBox();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             panelMenuLeft.SuspendLayout();
             panelHeader.SuspendLayout();
             panelContent.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // panelMenuLeft
@@ -69,12 +67,13 @@
             // buttonAuth
             // 
             buttonAuth.BackColor = Color.SkyBlue;
+            buttonAuth.Dock = DockStyle.Bottom;
             buttonAuth.FlatAppearance.BorderSize = 0;
             buttonAuth.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
             buttonAuth.FlatStyle = FlatStyle.Flat;
-            buttonAuth.Location = new Point(53, 481);
+            buttonAuth.Location = new Point(0, 517);
             buttonAuth.Name = "buttonAuth";
-            buttonAuth.Size = new Size(107, 44);
+            buttonAuth.Size = new Size(220, 44);
             buttonAuth.TabIndex = 0;
             buttonAuth.Text = "Auth";
             buttonAuth.UseVisualStyleBackColor = false;
@@ -83,81 +82,86 @@
             // buttonHistory
             // 
             buttonHistory.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonHistory.BackColor = Color.LightSkyBlue;
             buttonHistory.Dock = DockStyle.Top;
-            buttonHistory.FlatAppearance.BorderColor = Color.CornflowerBlue;
-            buttonHistory.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            buttonHistory.FlatAppearance.BorderSize = 0;
+            buttonHistory.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonHistory.FlatStyle = FlatStyle.Flat;
-            buttonHistory.Location = new Point(0, 229);
+            buttonHistory.Location = new Point(0, 217);
             buttonHistory.Margin = new Padding(4);
             buttonHistory.Name = "buttonHistory";
-            buttonHistory.Size = new Size(220, 39);
+            buttonHistory.Size = new Size(220, 44);
             buttonHistory.TabIndex = 7;
             buttonHistory.Text = "History";
-            buttonHistory.UseVisualStyleBackColor = true;
+            buttonHistory.UseVisualStyleBackColor = false;
             buttonHistory.Click += buttonHistory_Click;
             // 
             // buttonFavorite
             // 
             buttonFavorite.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonFavorite.BackColor = Color.LightSkyBlue;
             buttonFavorite.Dock = DockStyle.Top;
-            buttonFavorite.FlatAppearance.BorderColor = Color.CornflowerBlue;
-            buttonFavorite.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            buttonFavorite.FlatAppearance.BorderSize = 0;
+            buttonFavorite.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonFavorite.FlatStyle = FlatStyle.Flat;
-            buttonFavorite.Location = new Point(0, 190);
+            buttonFavorite.Location = new Point(0, 173);
             buttonFavorite.Margin = new Padding(4);
             buttonFavorite.Name = "buttonFavorite";
-            buttonFavorite.Size = new Size(220, 39);
+            buttonFavorite.Size = new Size(220, 44);
             buttonFavorite.TabIndex = 6;
             buttonFavorite.Text = "Favorite";
-            buttonFavorite.UseVisualStyleBackColor = true;
+            buttonFavorite.UseVisualStyleBackColor = false;
             buttonFavorite.Click += buttonFavorite_Click;
             // 
             // buttonMyItems
             // 
             buttonMyItems.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonMyItems.BackColor = Color.LightSkyBlue;
             buttonMyItems.Dock = DockStyle.Top;
-            buttonMyItems.FlatAppearance.BorderColor = Color.CornflowerBlue;
-            buttonMyItems.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            buttonMyItems.FlatAppearance.BorderSize = 0;
+            buttonMyItems.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonMyItems.FlatStyle = FlatStyle.Flat;
-            buttonMyItems.Location = new Point(0, 151);
+            buttonMyItems.Location = new Point(0, 129);
             buttonMyItems.Margin = new Padding(4);
             buttonMyItems.Name = "buttonMyItems";
-            buttonMyItems.Size = new Size(220, 39);
+            buttonMyItems.Size = new Size(220, 44);
             buttonMyItems.TabIndex = 5;
             buttonMyItems.Text = "My Items";
-            buttonMyItems.UseVisualStyleBackColor = true;
+            buttonMyItems.UseVisualStyleBackColor = false;
             buttonMyItems.Click += buttonMyItems_Click;
             // 
             // buttonBrowse
             // 
             buttonBrowse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonBrowse.BackColor = Color.LightSkyBlue;
             buttonBrowse.Dock = DockStyle.Top;
-            buttonBrowse.FlatAppearance.BorderColor = Color.CornflowerBlue;
-            buttonBrowse.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            buttonBrowse.FlatAppearance.BorderSize = 0;
+            buttonBrowse.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonBrowse.FlatStyle = FlatStyle.Flat;
-            buttonBrowse.Location = new Point(0, 112);
+            buttonBrowse.Location = new Point(0, 85);
             buttonBrowse.Margin = new Padding(4);
             buttonBrowse.Name = "buttonBrowse";
-            buttonBrowse.Size = new Size(220, 39);
+            buttonBrowse.Size = new Size(220, 44);
             buttonBrowse.TabIndex = 4;
             buttonBrowse.Text = "Browse";
-            buttonBrowse.UseVisualStyleBackColor = true;
+            buttonBrowse.UseVisualStyleBackColor = false;
             buttonBrowse.Click += buttonBrowse_Click;
             // 
             // buttonMenuMain
             // 
             buttonMenuMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonMenuMain.BackColor = Color.LightSkyBlue;
             buttonMenuMain.Dock = DockStyle.Top;
-            buttonMenuMain.FlatAppearance.BorderColor = Color.CornflowerBlue;
-            buttonMenuMain.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            buttonMenuMain.FlatAppearance.BorderSize = 0;
+            buttonMenuMain.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonMenuMain.FlatStyle = FlatStyle.Flat;
-            buttonMenuMain.Location = new Point(0, 73);
+            buttonMenuMain.Location = new Point(0, 41);
             buttonMenuMain.Margin = new Padding(4);
             buttonMenuMain.Name = "buttonMenuMain";
-            buttonMenuMain.Size = new Size(220, 39);
+            buttonMenuMain.Size = new Size(220, 44);
             buttonMenuMain.TabIndex = 3;
             buttonMenuMain.Text = "Main";
-            buttonMenuMain.UseVisualStyleBackColor = true;
+            buttonMenuMain.UseVisualStyleBackColor = false;
             buttonMenuMain.Click += buttonMenuMain_Click;
             // 
             // panel1
@@ -168,29 +172,41 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(220, 73);
+            panel1.Size = new Size(220, 41);
             panel1.TabIndex = 2;
             // 
             // panelHeader
             // 
             panelHeader.BackColor = SystemColors.ActiveCaption;
+            panelHeader.Controls.Add(panelHeaderControls);
             panelHeader.Controls.Add(buttonCart);
             panelHeader.Controls.Add(buttonMails);
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(220, 0);
             panelHeader.Margin = new Padding(0);
             panelHeader.Name = "panelHeader";
-            panelHeader.Size = new Size(964, 73);
+            panelHeader.Padding = new Padding(20, 0, 0, 0);
+            panelHeader.Size = new Size(964, 40);
             panelHeader.TabIndex = 1;
+            // 
+            // panelHeaderControls
+            // 
+            panelHeaderControls.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panelHeaderControls.BackColor = Color.Transparent;
+            panelHeaderControls.Location = new Point(182, 6);
+            panelHeaderControls.Margin = new Padding(0);
+            panelHeaderControls.Name = "panelHeaderControls";
+            panelHeaderControls.Size = new Size(600, 28);
+            panelHeaderControls.TabIndex = 2;
             // 
             // buttonCart
             // 
             buttonCart.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonCart.FlatStyle = FlatStyle.Flat;
-            buttonCart.Location = new Point(922, 34);
+            buttonCart.Location = new Point(922, 1);
             buttonCart.Margin = new Padding(0);
             buttonCart.Name = "buttonCart";
-            buttonCart.Size = new Size(42, 39);
+            buttonCart.Size = new Size(40, 40);
             buttonCart.TabIndex = 1;
             buttonCart.Text = "C";
             buttonCart.UseVisualStyleBackColor = true;
@@ -199,10 +215,10 @@
             // 
             buttonMails.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonMails.FlatStyle = FlatStyle.Flat;
-            buttonMails.Location = new Point(880, 34);
+            buttonMails.Location = new Point(880, 1);
             buttonMails.Margin = new Padding(0);
             buttonMails.Name = "buttonMails";
-            buttonMails.Size = new Size(42, 39);
+            buttonMails.Size = new Size(40, 40);
             buttonMails.TabIndex = 0;
             buttonMails.Text = "M";
             buttonMails.UseVisualStyleBackColor = true;
@@ -210,48 +226,19 @@
             // panelContent
             // 
             panelContent.BackColor = SystemColors.ActiveBorder;
-            panelContent.Controls.Add(richTextBox1);
-            panelContent.Controls.Add(tableLayoutPanel1);
+            panelContent.Controls.Add(flowLayoutPanel1);
             panelContent.Dock = DockStyle.Fill;
-            panelContent.Location = new Point(220, 73);
+            panelContent.Location = new Point(220, 40);
             panelContent.Name = "panelContent";
-            panelContent.Size = new Size(964, 488);
+            panelContent.Size = new Size(964, 521);
             panelContent.TabIndex = 3;
             // 
-            // richTextBox1
+            // flowLayoutPanel1
             // 
-            richTextBox1.Location = new Point(291, 268);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(237, 96);
-            richTextBox1.TabIndex = 1;
-            richTextBox1.Text = "";
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.ColumnCount = 3;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Controls.Add(textBox1, 0, 0);
-            tableLayoutPanel1.Location = new Point(184, 95);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Size = new Size(385, 100);
-            tableLayoutPanel1.TabIndex = 0;
-            // 
-            // textBox1
-            // 
-            textBox1.Dock = DockStyle.Fill;
-            textBox1.Location = new Point(0, 0);
-            textBox1.Margin = new Padding(0);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.ReadOnly = true;
-            textBox1.Size = new Size(182, 50);
-            textBox1.TabIndex = 2;
-            textBox1.Text = "A really long description for the Item #{i}, where everything is mentioned. It could be small or very large.";
+            flowLayoutPanel1.Location = new Point(268, 133);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(222, 127);
+            flowLayoutPanel1.TabIndex = 0;
             // 
             // MarketPlaceForm
             // 
@@ -270,8 +257,6 @@
             panelMenuLeft.ResumeLayout(false);
             panelHeader.ResumeLayout(false);
             panelContent.ResumeLayout(false);
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -288,9 +273,8 @@
         private Button buttonMails;
         private Button buttonCart;
         private Panel panelContent;
-        private TableLayoutPanel tableLayoutPanel1;
-        private RichTextBox richTextBox1;
-        private TextBox textBox1;
         private Button buttonAuth;
+        private Panel panelHeaderControls;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }
