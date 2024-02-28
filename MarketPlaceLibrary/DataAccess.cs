@@ -130,7 +130,7 @@ namespace MarketPlaceLibrary
                                     result.GetInt32("OWNER_ID")
                                 )
                             {
-                                Description = result.GetString("ITEM_DESCRIPTION")
+                                Description = result.GetString("ITEM_DESCRIPTION"),
                             }
                         ); ;
                 }
@@ -171,8 +171,49 @@ namespace MarketPlaceLibrary
             return orderId;
         }
 
+        public static async Task<int> AddItemToMarket(
+            int ownerId, string title, string description, byte categoryId,
+            decimal priceStart, decimal? priceEnd = null, decimal? bidStep = null,
+            DateTime? dateEnd = null)
+
+        {
+            int itemId = 0;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.ITEM_ADD_TO_MARKET",
+                    new SqlParameter("@TITLE", title),
+                    new SqlParameter("@ITEM_DESCRIPTION", description),
+                    new SqlParameter("@ITEM_CATEGORY", categoryId),
+                    new SqlParameter("@PRICE_START", priceStart),
+                    new SqlParameter("@PRICE_END", priceEnd),
+                    new SqlParameter("@BID_STEP", bidStep),
+                    new SqlParameter("@DATE_END", dateEnd),
+                    new SqlParameter("@OWNER_ID", ownerId),
+                    new SqlParameter
+                    {
+                        ParameterName = "@ITEM_ID",
+                        SqlDbType = SqlDbType.Int,
+                        Direction = ParameterDirection.Output
+                    }
+                    );
+
+                await sqlCommand.ExecuteNonQueryAsync();
+
+                if (sqlCommand.Parameters["@ITEM_ID"].Value != DBNull.Value)
+                {
+                    itemId = (int)sqlCommand.Parameters["@ITEM_ID"].Value;
+                }
+
+            }
+
+            return itemId;
+        }
+
         // For tests only
-        public static async void SaveImageToDatabase(string imagePath)
+        public static async Task<int> SaveImageToDatabase(int itemId, string imagePath)
         {
             byte[] imageData;
             using (FileStream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
@@ -183,30 +224,32 @@ namespace MarketPlaceLibrary
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO MARKET_PLACE.IMAGES (IMAGE_BINARY) VALUES (@IMAGE_BINARY)";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add("@IMAGE_BINARY", SqlDbType.VarBinary, -1).Value = imageData;
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.ITEM_IMAGE_ADD",
+                    new SqlParameter("@ITEM_ID", itemId),
+                    new SqlParameter("@IMAGE_BINARY", imageData)
+                    );
 
-                await connection.OpenAsync();
-                command.ExecuteNonQuery();
+
+                await sqlCommand.ExecuteNonQueryAsync();
             }
+
+            return 1;
         }
 
         // For tests only
-        public static async Task<byte[]> RetrieveImageFromDatabase(int imageId)
+        public static async Task<byte[]> RetrieveImageFromDatabase(int itemId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                // TODO - remove, imitates long load
-                Random random = new Random();
-                int x = random.Next(0, 4);
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.ITEM_IMAGE_GET",
+                    new SqlParameter("@ITEM_ID", itemId)
+                    );
 
-                string query = $"WAITFOR DELAY '00:00:0{x}'; SELECT IMAGE_BINARY FROM MARKET_PLACE.IMAGES WHERE ID = @IMAGE_ID";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@IMAGE_ID", imageId);
-
-                await connection.OpenAsync();
-                byte[] imageData = (byte[])command.ExecuteScalar();
+                byte[] imageData = (byte[])sqlCommand.ExecuteScalar();
 
                 return imageData;
             }

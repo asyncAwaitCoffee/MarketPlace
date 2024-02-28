@@ -11,9 +11,12 @@ namespace MarketPlaceLibrary.Models
         // Properties
         public int Id { get; set; }
         public string Title { get; set; }
-        public decimal StartPrice { get; set; }
+        public decimal PriceStart { get; set; }
+        public decimal PriceCurrent { get; set; }
+        public decimal PriceEnd { get; set; }
         public byte Category { get; set; }
         public DateTime DateStart { get; set; }
+        public DateTime DateEnd { get; set; }
         public int OwnerId { get; set; }
 
         public string Description { get; set; }
@@ -24,7 +27,7 @@ namespace MarketPlaceLibrary.Models
         {
             Id = id;
             Title = title;
-            StartPrice = startPrice;
+            PriceStart = startPrice;
             Category = category;
             DateStart = dateStart;
             OwnerId = ownerId;

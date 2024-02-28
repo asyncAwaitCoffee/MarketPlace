@@ -22,6 +22,7 @@ namespace MarketPlaceUI
                 return;
             }
             _currentForm = CurrentForm.Main;
+            flowLayoutPanelHeaderControls.Controls.Clear();
 
             panelContent.Controls.Clear();
 
@@ -41,6 +42,7 @@ namespace MarketPlaceUI
                 return;
             }
             _currentForm = CurrentForm.Browse;
+            flowLayoutPanelHeaderControls.Controls.Clear();
 
             panelContent.Controls.Clear();
 
@@ -54,7 +56,8 @@ namespace MarketPlaceUI
             flowLayoutPanel.AutoSize = true;
             flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
-            List<MarketItem> marketItems = await DataAccess.GetMarketItems(1, 20, 1);
+            // TODO - ownerId
+            List<MarketItem> marketItems = await DataAccess.GetMarketItems(1, 20, User.Instance().Id);
 
 
             foreach (MarketItem marketItem in marketItems)
@@ -80,37 +83,103 @@ namespace MarketPlaceUI
 
         }
 
-        private void buttonMyItems_Click(object sender, EventArgs e)
+        private async void buttonMyItems_Click(object sender, EventArgs e)
         {
             if (_currentForm == CurrentForm.MyItems)
             {
                 return;
             }
             _currentForm = CurrentForm.MyItems;
+            flowLayoutPanelHeaderControls.Controls.Clear();
 
             panelContent.Controls.Clear();
 
             DataGridView dataGridView = new DataGridView();
+            dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView.AllowUserToAddRows = false;
             dataGridView.Dock = DockStyle.Fill;
 
             DataGridViewTextBoxColumn columnTitle = new DataGridViewTextBoxColumn();
-            DataGridViewButtonColumn columnEditButton = new DataGridViewButtonColumn();
+            DataGridViewTextBoxColumn columnCategory = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnPriceStart = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnPriceCurrent = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnPriceEnd = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnBidStep = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnDateStart = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnDateEnd = new DataGridViewTextBoxColumn();
+            // TODO - edit
+            //DataGridViewButtonColumn columnEditButton = new DataGridViewButtonColumn();
 
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { columnTitle, columnEditButton });
+            dataGridView.Columns.AddRange([
+                columnTitle, columnCategory, columnPriceStart, columnPriceCurrent, columnPriceEnd,
+                columnBidStep, columnDateStart, columnDateEnd//, columnEditButton
+                ]);
             dataGridView.Name = "dataGridView1";
 
             columnTitle.HeaderText = "Title";
             columnTitle.Name = "columnTitle";
-            columnEditButton.HeaderText = "Edit";
-            columnEditButton.Name = "columnEditButton";
+
+            columnCategory.HeaderText = "Category";
+            columnCategory.Name = "columnCategory";
+
+            columnPriceStart.HeaderText = "Start Price";
+            columnPriceStart.Name = "columnPriceStart";
+
+            columnPriceCurrent.HeaderText = "Current Price";
+            columnPriceCurrent.Name = "columnPriceCurrent";
+
+            columnPriceEnd.HeaderText = "End Price";
+            columnPriceEnd.Name = "columnPriceEnd";
+
+            columnBidStep.HeaderText = "Bid Step";
+            columnBidStep.Name = "columnBidStep";
+
+            columnDateStart.HeaderText = "Start Date";
+            columnDateStart.Name = "columnDateStart";
+
+            columnDateEnd.HeaderText = "End Date";
+            columnDateEnd.Name = "columnDateEnd";
+
+            
+            //columnEditButton.HeaderText = "Edit";
+            //columnEditButton.Name = "columnEditButton";
+
+            List<MarketItem> myMarketItems = await DataAccess.GetMarketItems(1, 20, User.Instance().Id, filterByOwnerId: true);
+
+            foreach (var myItem in myMarketItems)
+            {
+                var row = new DataGridViewRow();
+                row.CreateCells(dataGridView);
+
+                row.Tag = myItem.Id;
+
+                row.Cells[0].Value = myItem.Title;
+                row.Cells[1].Value = myItem.Category;
+                row.Cells[2].Value = myItem.PriceStart;
+                row.Cells[3].Value = myItem.PriceCurrent;
+                row.Cells[4].Value = myItem.PriceEnd;
+                row.Cells[5].Value = myItem.BidStep;
+                row.Cells[6].Value = myItem.DateStart;
+                row.Cells[7].Value = myItem.DateEnd;
+                //row.Cells[8].Value = "Edit";
+
+                dataGridView.Rows.Add(row);
+            }
 
             panelContent.Controls.Add(dataGridView);
 
-            Button addItemButton = ButtonFactory.BuildButton("addItemButton", ButtonSize.Small, new Point(0, 0), text: "Add item");
+            Button addItemButton = ButtonFactory.BuildButton("addItemButton", ButtonSize.Small, new Point(60, 0), text: "Item");
+
             addItemButton.Click += addItemButton_Click;
 
-            panelHeaderControls.Controls.Add(addItemButton);
+            flowLayoutPanelHeaderControls.Controls.Add(addItemButton);
+
+            void addItemButton_Click(object sender, EventArgs e)
+            {
+                ItemSaleForm itemAddForm = new ItemSaleForm();
+                itemAddForm.ShowDialog();
+            }
         }
 
         private void buttonFavorite_Click(object sender, EventArgs e)
@@ -120,6 +189,7 @@ namespace MarketPlaceUI
                 return;
             }
             _currentForm = CurrentForm.Favorites;
+            flowLayoutPanelHeaderControls.Controls.Clear();
 
             panelContent.Controls.Clear();
 
@@ -165,6 +235,7 @@ namespace MarketPlaceUI
                 return;
             }
             _currentForm = CurrentForm.History;
+            flowLayoutPanelHeaderControls.Controls.Clear();
 
             panelContent.Controls.Clear();
 
@@ -195,33 +266,30 @@ namespace MarketPlaceUI
             authForm.ShowDialog();
         }
 
-        private void addItemButton_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image Files (*.jpg; *.jpeg; *.png; *.gif; *.bmp)|*.jpg; *.jpeg; *.png; *.gif; *.bmp|All files (*.*)|*.*";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string imagePath = openFileDialog.FileName;
-
-                DataAccess.SaveImageToDatabase(imagePath);
-            }
-        }
+        
 
         // TODO - for all controls?
-        private async Task<Image> LoadImageAsync(int id)
+        private async Task<Image> LoadImageAsync(int itemId)
         {
-            byte[] imageData = await DataAccess.RetrieveImageFromDatabase(id);
+            byte[] imageData = await DataAccess.RetrieveImageFromDatabase(itemId);
 
             TaskCompletionSource<Image> tcs = new TaskCompletionSource<Image>();
 
-            await Task.Run(() =>
+            if (imageData == null)
             {
-                using (MemoryStream ms = new MemoryStream(imageData))
+                tcs.SetResult(Image.FromFile(@"D:\Programming\projects\MarketPlace\Assets\NO_IMAGE.png"));
+            }
+
+            else
+            {
+                await Task.Run(() =>
                 {
-                    tcs.SetResult(Image.FromStream(ms));
-                }
-            });
+                    using (MemoryStream ms = new MemoryStream(imageData))
+                    {
+                        tcs.SetResult(Image.FromStream(ms));
+                    }
+                });
+            }            
 
             return await tcs.Task;
         }
