@@ -1,13 +1,7 @@
-﻿using Azure;
-using MarketPlaceLibrary.Models;
+﻿using MarketPlaceLibrary.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MarketPlaceLibrary
 {
@@ -256,6 +250,27 @@ namespace MarketPlaceLibrary
                 
         }
 
+        public static async Task<byte> SaveHistory(int userId, int partnerId, int itemId, int operationType, decimal cost)
+        {
+            byte result = 0;
 
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.HISTORY_SAVE",
+                    new SqlParameter("@MARKET_USER_ID", userId),
+                    new SqlParameter("@MARKET_PARTNER_ID", partnerId),
+                    new SqlParameter("@MARKET_ITEM_ID", itemId),
+                    new SqlParameter("@OPERATION_TYPE", operationType),
+                    new SqlParameter("@COST", cost)
+                    );
+
+
+                await sqlCommand.ExecuteNonQueryAsync();
+            }
+
+            return 1;
+        }
     }
 }

@@ -182,52 +182,6 @@ namespace MarketPlaceUI
             }
         }
 
-        private void buttonFavorite_Click(object sender, EventArgs e)
-        {
-            if (_currentForm == CurrentForm.Favorites)
-            {
-                return;
-            }
-            _currentForm = CurrentForm.Favorites;
-            flowLayoutPanelHeaderControls.Controls.Clear();
-
-            panelContent.Controls.Clear();
-
-            FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
-
-            flowLayoutPanel.Location = new Point(0, 0);
-            flowLayoutPanel.Dock = DockStyle.Fill;
-            flowLayoutPanel.Name = "flowLayoutPanel2";
-            flowLayoutPanel.Visible = true;
-            flowLayoutPanel.AutoScroll = true;
-
-            for (int i = 0; i < 10; i++)
-            {
-                Panel panel = new Panel();
-                panel.Size = new Size(200, 200);
-                panel.BackColor = Color.DarkOliveGreen;
-
-                PictureBox pictureBox = new PictureBox();
-                pictureBox.BackColor = Color.GreenYellow;
-                pictureBox.Size = new Size(200, 100);
-
-                Label label = new Label();
-                label.Text = $"Item #{i}";
-                label.Top = pictureBox.Height - label.Height;
-                label.Left = 0;
-                label.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-
-                pictureBox.Controls.Add(label);
-
-                panel.Controls.Add(pictureBox);
-
-                flowLayoutPanel.Controls.Add(panel);
-            }
-
-            panelContent.Controls.Add(flowLayoutPanel);
-
-        }
-
         private void buttonHistory_Click(object sender, EventArgs e)
         {
             if (_currentForm == CurrentForm.History)

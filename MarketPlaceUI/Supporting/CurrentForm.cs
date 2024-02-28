@@ -6,12 +6,18 @@ using System.Threading.Tasks;
 
 namespace MarketPlaceUI.Supporting
 {
-    internal enum CurrentForm
+    public enum CurrentForm
     {
         Main,
         Browse,
         MyItems,
-        Favorites,
         History
+    }
+    public enum OperationType
+    {
+        Buy,
+        Bid,
+        Place,
+        Sell
     }
 }
