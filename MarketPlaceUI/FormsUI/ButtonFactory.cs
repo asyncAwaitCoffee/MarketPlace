@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace MarketPlaceUI.FormsUI
     internal static class ButtonFactory
     {
         // TODO - impl
-        public static Button BuildButton(string name, string text, ButtonSize buttonSize, Point location, DockStyle dockStyle = DockStyle.None)
+        public static Button BuildButton(string name, ButtonSize buttonSize, Point location, string text = "", DockStyle dockStyle = DockStyle.None, string imagePath = @"")
         {
             Button button = new Button();
 
@@ -20,7 +21,19 @@ namespace MarketPlaceUI.FormsUI
             button.Location = location;
             button.Name = name;
             button.Margin = new Padding(1, 0, 1, 0);
-            button.Padding = new Padding(0);
+
+            Debug.WriteLine(button.Padding);
+
+            Debug.WriteLine($"imagePath: {imagePath}");
+
+            if (imagePath.Length > 0 && File.Exists(imagePath))
+            {
+                Image image = Image.FromFile(imagePath);
+
+                button.BackgroundImage = new Bitmap(image, 30, 30);
+                button.BackgroundImageLayout = ImageLayout.Center;
+                //button.Image = Image.FromFile(imagePath);                
+            }
 
             (Size size, float fontSize) = buttonSize switch
             {
@@ -35,7 +48,10 @@ namespace MarketPlaceUI.FormsUI
 
             button.Size = size;
             button.TabIndex = 0;
-            button.Text = text;
+            if (text.Length > 0)
+            {
+                button.Text = text;
+            }
             button.UseVisualStyleBackColor = false;
             button.Visible = true;
             button.Dock = dockStyle;

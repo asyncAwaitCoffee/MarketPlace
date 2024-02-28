@@ -35,6 +35,7 @@ namespace MarketPlaceUI
 
         private async void buttonBrowse_Click(object sender, EventArgs e)
         {
+            // TODO - scrollbar issue
             if (_currentForm == CurrentForm.Browse)
             {
                 return;
@@ -106,7 +107,7 @@ namespace MarketPlaceUI
 
             panelContent.Controls.Add(dataGridView);
 
-            Button addItemButton = ButtonFactory.BuildButton("addItemButton", "Add item", ButtonSize.Small, new Point(0, 0));
+            Button addItemButton = ButtonFactory.BuildButton("addItemButton", ButtonSize.Small, new Point(0, 0), text: "Add item");
             addItemButton.Click += addItemButton_Click;
 
             panelHeaderControls.Controls.Add(addItemButton);
