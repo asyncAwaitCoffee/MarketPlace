@@ -38,12 +38,13 @@
             buttonMenuMain = new Button();
             panel1 = new Panel();
             panelHeader = new Panel();
-            panelHeaderControls = new Panel();
             buttonCart = new Button();
             buttonMails = new Button();
             panelContent = new Panel();
-            flowLayoutPanel1 = new FlowLayoutPanel();
+            textBox1 = new TextBox();
             button1 = new Button();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            flowLayoutPanelHeaderControls = new FlowLayoutPanel();
             panelMenuLeft.SuspendLayout();
             panelHeader.SuspendLayout();
             panelContent.SuspendLayout();
@@ -180,7 +181,7 @@
             // panelHeader
             // 
             panelHeader.BackColor = SystemColors.ActiveCaption;
-            panelHeader.Controls.Add(panelHeaderControls);
+            panelHeader.Controls.Add(flowLayoutPanelHeaderControls);
             panelHeader.Controls.Add(buttonCart);
             panelHeader.Controls.Add(buttonMails);
             panelHeader.Dock = DockStyle.Top;
@@ -188,24 +189,14 @@
             panelHeader.Margin = new Padding(0);
             panelHeader.Name = "panelHeader";
             panelHeader.Padding = new Padding(20, 0, 0, 0);
-            panelHeader.Size = new Size(964, 40);
+            panelHeader.Size = new Size(964, 50);
             panelHeader.TabIndex = 1;
-            // 
-            // panelHeaderControls
-            // 
-            panelHeaderControls.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panelHeaderControls.BackColor = Color.Transparent;
-            panelHeaderControls.Location = new Point(182, 6);
-            panelHeaderControls.Margin = new Padding(0);
-            panelHeaderControls.Name = "panelHeaderControls";
-            panelHeaderControls.Size = new Size(600, 28);
-            panelHeaderControls.TabIndex = 2;
             // 
             // buttonCart
             // 
             buttonCart.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonCart.FlatStyle = FlatStyle.Flat;
-            buttonCart.Location = new Point(922, 1);
+            buttonCart.Location = new Point(922, 11);
             buttonCart.Margin = new Padding(0);
             buttonCart.Name = "buttonCart";
             buttonCart.Size = new Size(40, 40);
@@ -217,7 +208,7 @@
             // 
             buttonMails.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonMails.FlatStyle = FlatStyle.Flat;
-            buttonMails.Location = new Point(880, 1);
+            buttonMails.Location = new Point(880, 11);
             buttonMails.Margin = new Padding(0);
             buttonMails.Name = "buttonMails";
             buttonMails.Size = new Size(40, 40);
@@ -228,20 +219,23 @@
             // panelContent
             // 
             panelContent.BackColor = SystemColors.ActiveBorder;
+            panelContent.Controls.Add(textBox1);
             panelContent.Controls.Add(button1);
             panelContent.Controls.Add(flowLayoutPanel1);
             panelContent.Dock = DockStyle.Fill;
-            panelContent.Location = new Point(220, 40);
+            panelContent.Location = new Point(220, 50);
             panelContent.Name = "panelContent";
-            panelContent.Size = new Size(964, 521);
+            panelContent.Size = new Size(964, 511);
             panelContent.TabIndex = 3;
             // 
-            // flowLayoutPanel1
+            // textBox1
             // 
-            flowLayoutPanel1.Location = new Point(268, 133);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(222, 127);
-            flowLayoutPanel1.TabIndex = 0;
+            textBox1.Enabled = false;
+            textBox1.Location = new Point(650, 153);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(100, 29);
+            textBox1.TabIndex = 2;
+            textBox1.Text = "asd";
             // 
             // button1
             // 
@@ -252,6 +246,21 @@
             button1.TabIndex = 1;
             button1.Text = "button1";
             button1.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.Location = new Point(268, 133);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(222, 127);
+            flowLayoutPanel1.TabIndex = 0;
+            // 
+            // flowLayoutPanelHeaderControls
+            // 
+            flowLayoutPanelHeaderControls.BackColor = Color.SkyBlue;
+            flowLayoutPanelHeaderControls.Location = new Point(5, 5);
+            flowLayoutPanelHeaderControls.Name = "flowLayoutPanelHeaderControls";
+            flowLayoutPanelHeaderControls.Size = new Size(800, 40);
+            flowLayoutPanelHeaderControls.TabIndex = 2;
             // 
             // MarketPlaceForm
             // 
@@ -270,6 +279,7 @@
             panelMenuLeft.ResumeLayout(false);
             panelHeader.ResumeLayout(false);
             panelContent.ResumeLayout(false);
+            panelContent.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -287,8 +297,9 @@
         private Button buttonCart;
         private Panel panelContent;
         private Button buttonAuth;
-        private Panel panelHeaderControls;
         private FlowLayoutPanel flowLayoutPanel1;
         private Button button1;
+        private TextBox textBox1;
+        private FlowLayoutPanel flowLayoutPanelHeaderControls;
     }
 }

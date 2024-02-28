@@ -21,7 +21,7 @@ namespace MarketPlaceUI.FormsUI
 
             Label labelPrice = new Label();
             labelPrice.BackColor = Color.White;
-            labelPrice.Text = $"{marketItem.StartPrice}$";
+            labelPrice.Text = $"{marketItem.PriceStart}$";
             labelPrice.Top = pictureBox.Height - labelTitle.Height;
             labelPrice.Left = pictureBox.Width - labelTitle.Width;
             labelPrice.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
@@ -56,7 +56,8 @@ namespace MarketPlaceUI.FormsUI
             //textBox.Size = new Size(300, 200);
             textBox.Margin = new Padding(0);
             textBox.Text = marketItem.Description;
-            textBox.ReadOnly = true;
+            //textBox.ReadOnly = true;
+            textBox.Enabled = false;
 
             Panel controlWrapperPanel = new Panel();
             controlWrapperPanel.Dock = DockStyle.Fill;
@@ -91,7 +92,7 @@ namespace MarketPlaceUI.FormsUI
 
             buttonBuy.Click += async (object sender, EventArgs e) =>
             {
-                var result = MessageBox.Show($"Confirm your purchase of {marketItem.Title} for {marketItem.StartPrice}$.",
+                var result = MessageBox.Show($"Confirm your purchase of {marketItem.Title} for {marketItem.PriceStart}$.",
                     "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
                 if (result == DialogResult.OK)
