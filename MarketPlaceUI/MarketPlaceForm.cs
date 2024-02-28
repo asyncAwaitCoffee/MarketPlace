@@ -31,7 +31,6 @@ namespace MarketPlaceUI
 
             FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
 
-            flowLayoutPanel.BackColor = Color.CornflowerBlue;
             flowLayoutPanel.Location = new Point(0, 0);
             flowLayoutPanel.Dock = DockStyle.Fill;
             flowLayoutPanel.Name = "flowLayoutPanel2";
@@ -71,7 +70,6 @@ namespace MarketPlaceUI
                 pictureBox.Controls.Add(label);
 
                 TableLayoutPanel panelInner = new TableLayoutPanel();
-                panelInner.BackColor = Color.Blue;
                 panelInner.Size = new Size(300, 100);
                 panelInner.Dock = DockStyle.Bottom;
                 panelInner.ColumnCount = 1;
@@ -79,6 +77,9 @@ namespace MarketPlaceUI
                 panelInner.RowCount = 2;
                 panelInner.RowStyles.Add(new RowStyle(SizeType.Absolute, 60));
                 panelInner.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
+                panelInner.Padding = new Padding(0);
+                panelInner.Margin = new Padding(0);
+                panelInner.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
 
                 TextBox textBox = new TextBox();
                 textBox.Multiline = true;
@@ -94,12 +95,17 @@ namespace MarketPlaceUI
 
                 Panel controlWrapperPanel = new Panel();
                 controlWrapperPanel.Dock = DockStyle.Fill;
-                controlWrapperPanel.Padding = new Padding(5, 0, 5, 0);
+                controlWrapperPanel.Padding = new Padding(0);
+                controlWrapperPanel.Margin = new Padding(0);
+                controlWrapperPanel.BackColor = UISettings.Colors[0];
 
                 FlowLayoutPanel panelControlsLeft = new FlowLayoutPanel();
-                panelControlsLeft.Dock = DockStyle.Left;
+                //panelControlsLeft.Dock = DockStyle.Left;
+                panelControlsLeft.Size = new Size(150, 40);
+                panelControlsLeft.Padding = new Padding(0);
+                panelControlsLeft.Margin = new Padding(0);
                 panelControlsLeft.FlowDirection = FlowDirection.LeftToRight;
-                Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", "Info", ButtonSize.Tiny, new Point(0, 0));
+                Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", "?", ButtonSize.Tiny, new Point(0, 0));
                 Button buttonFav = ButtonFactory.BuildButton("buttonFav", "Fav", ButtonSize.Tiny, new Point(0, 0));
                 
                 buttonInfo.Click += (object sender, EventArgs e) => { ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog(); };
@@ -107,10 +113,13 @@ namespace MarketPlaceUI
                 panelControlsLeft.Controls.AddRange([buttonInfo, buttonFav]);
 
                 FlowLayoutPanel panelControlsRight = new FlowLayoutPanel();
-                panelControlsRight.Dock = DockStyle.Right;
+                //panelControlsRight.Dock = DockStyle.Right;
+                panelControlsRight.Size = new Size(150, 40);
+                panelControlsRight.Padding = new Padding(0);
+                panelControlsRight.Left = 150;
                 panelControlsRight.FlowDirection = FlowDirection.RightToLeft;
-                Button buttonBid = ButtonFactory.BuildButton("buttonBid", "Bid", ButtonSize.Tiny, new Point(0,0));
-                Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", "Buy", ButtonSize.Tiny, new Point(0, 0));
+                Button buttonBid = ButtonFactory.BuildButton("buttonBid", "Bid", ButtonSize.Small, new Point(0, 0));
+                Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", "Buy", ButtonSize.Small, new Point(0, 0));
 
 
                 panelControlsRight.Controls.AddRange([buttonBuy, buttonBid]);
@@ -164,7 +173,6 @@ namespace MarketPlaceUI
 
             FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
 
-            flowLayoutPanel.BackColor = Color.BlueViolet;
             flowLayoutPanel.Location = new Point(0, 0);
             flowLayoutPanel.Dock = DockStyle.Fill;
             flowLayoutPanel.Name = "flowLayoutPanel2";

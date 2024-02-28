@@ -13,20 +13,21 @@ namespace MarketPlaceUI.FormsUI
         {
             Button button = new Button();
 
-            button.BackColor = Color.SkyBlue;
+            button.BackColor = UISettings.Colors[2];
             button.FlatAppearance.BorderSize = 0;
-            button.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
+            button.FlatAppearance.MouseOverBackColor = UISettings.Colors[0];
             button.FlatStyle = FlatStyle.Flat;
             button.Location = location;
             button.Name = name;
             button.Margin = new Padding(1, 0, 1, 0);
+            button.Padding = new Padding(0);
 
             (Size size, float fontSize) = buttonSize switch
             {
-                ButtonSize.Tiny => (new Size(40, 40), 8F),
-                ButtonSize.Small => (new Size(90, 30), 10F),
-                ButtonSize.Medium => (new Size(200, 40), 12F),
-                ButtonSize.Large => (new Size(300, 60), 14F),
+                ButtonSize.Tiny => (new Size(40, 40), 10F),
+                ButtonSize.Small => (new Size(60, 40), 12F),
+                ButtonSize.Medium => (new Size(200, 40), 14F),
+                ButtonSize.Large => (new Size(300, 60), 16F),
                 _ => (new Size(217, 42), 14F)
             };
 
