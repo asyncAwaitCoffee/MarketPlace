@@ -1,4 +1,5 @@
 ﻿using MarketPlaceLibrary;
+using MarketPlaceLibrary.Models;
 using System.Data.Common;
 using System.Diagnostics;
 
@@ -127,7 +128,10 @@ namespace MarketPlaceUI
 
             if (userId != null)
             {
+                User.LogOut();
+
                 MessageBox.Show("You successfully logged in!");
+                User.Init((int)userId, textBoxAuthUserLogin.Text, (int)userLevel);
                 Close();
             }
             else

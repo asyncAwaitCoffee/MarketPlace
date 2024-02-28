@@ -17,6 +17,7 @@ namespace MarketPlaceLibrary.Models
         public int OwnerId { get; set; }
 
         public string Description { get; set; }
+        public decimal BidStep { get; set; }
 
         // Constructor
         public MarketItem(int id, string title, decimal startPrice, byte category, DateTime dateStart, int ownerId)

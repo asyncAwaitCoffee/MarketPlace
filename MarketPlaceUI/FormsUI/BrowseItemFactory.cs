@@ -1,10 +1,5 @@
-﻿using MarketPlaceLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using MarketPlaceLibrary;
+using MarketPlaceLibrary.Models;
 
 namespace MarketPlaceUI.FormsUI
 {
@@ -17,14 +12,22 @@ namespace MarketPlaceUI.FormsUI
             pictureBox.Size = new Size(300, 200);
             pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
 
-            Label label = new Label();
-            label.Text = marketItem.Title;
-            label.Top = pictureBox.Height - label.Height;
-            label.Left = 0;
-            label.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            label.BackColor = Color.Transparent;
+            Label labelTitle = new Label();
+            labelTitle.BackColor = Color.White;
+            labelTitle.Text = marketItem.Title;
+            labelTitle.Top = 0;
+            labelTitle.Left = 0;
+            labelTitle.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 
-            pictureBox.Controls.Add(label);
+            Label labelPrice = new Label();
+            labelPrice.BackColor = Color.White;
+            labelPrice.Text = $"{marketItem.StartPrice}$";
+            labelPrice.Top = pictureBox.Height - labelTitle.Height;
+            labelPrice.Left = pictureBox.Width - labelTitle.Width;
+            labelPrice.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+
+            pictureBox.Controls.Add(labelTitle);
+            pictureBox.Controls.Add(labelPrice);
 
             return pictureBox;
         }
@@ -67,8 +70,10 @@ namespace MarketPlaceUI.FormsUI
             panelControlsLeft.Padding = new Padding(0);
             panelControlsLeft.Margin = new Padding(0);
             panelControlsLeft.FlowDirection = FlowDirection.LeftToRight;
+
             Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", ButtonSize.Tiny, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\question.png");
             Button buttonFav = ButtonFactory.BuildButton("buttonFav", ButtonSize.Tiny, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\star.png");
+
 
             buttonInfo.Click += (object sender, EventArgs e) => { ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog(); };
 
@@ -80,11 +85,30 @@ namespace MarketPlaceUI.FormsUI
             panelControlsRight.Padding = new Padding(0);
             panelControlsRight.Left = 150;
             panelControlsRight.FlowDirection = FlowDirection.RightToLeft;
-            Button buttonBid = ButtonFactory.BuildButton("buttonBid", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\profits.png");
+
+            
             Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\salary.png");
 
+            buttonBuy.Click += async (object sender, EventArgs e) =>
+            {
+                var result = MessageBox.Show($"Confirm your purchase of {marketItem.Title} for {marketItem.StartPrice}$.",
+                    "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
-            panelControlsRight.Controls.AddRange([buttonBuy, buttonBid]);
+                if (result == DialogResult.OK)
+                {
+                    int orderId = await DataAccess.OrderAdd(User.Instance().Id, marketItem.Id);
+                    MessageBox.Show($"Order #{orderId} registered.");
+                }
+            };
+
+            panelControlsRight.Controls.Add(buttonBuy);
+
+
+            if (marketItem.BidStep != 0)
+            {
+                Button buttonBid = ButtonFactory.BuildButton("buttonBid", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\profits.png");
+                panelControlsRight.Controls.Add(buttonBid);
+            }
 
             controlWrapperPanel.Controls.Add(panelControlsLeft);
             controlWrapperPanel.Controls.Add(panelControlsRight);
