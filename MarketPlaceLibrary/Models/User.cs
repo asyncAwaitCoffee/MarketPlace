@@ -6,8 +6,44 @@ using System.Threading.Tasks;
 
 namespace MarketPlaceLibrary.Models
 {
-    public class User(string userName)
+    public class User
     {
-        public string Name { get; private set; } = userName;
+        public static User user = null;
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public int UserLevel { get; private set; }
+        public List<MarketItem> Cart { get; private set; } = new List<MarketItem>();
+        private static object locker = new object();
+
+        private User(int userId, string userName, int userLevel)
+        {
+            Id = userId;
+            Name = userName;
+            UserLevel = userLevel;
+        }
+
+        public static void Init(int userId, string userName, int userLevel)
+        {
+            if (user == null)
+            {
+                lock (locker)
+                {
+                    if (user == null)
+                    {
+                        user = new User(userId, userName, userLevel);                        
+                    }
+                }
+            }
+        }
+
+        public static User Instance()
+        {
+            return user;
+        }
+
+        public static void LogOut()
+        {
+            user = null;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MarketPlaceLibrary.Models;
+﻿using Azure;
+using MarketPlaceLibrary.Models;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace MarketPlaceLibrary
                             new MarketItem(
                                     result.GetInt32("ID"),
                                     result.GetString("TITLE"),
-                                    result.GetDecimal("START_PRICE"),
+                                    Math.Round(result.GetDecimal("START_PRICE"), 2),
                                     result.GetByte("ITEM_CATEGORY"),
                                     result.GetDateTime("DATE_START"),
                                     result.GetInt32("OWNER_ID")
@@ -137,6 +138,37 @@ namespace MarketPlaceLibrary
 
             return marketItems;
 
+        }
+
+        public static async Task<int> OrderAdd(int userId, int itemId)
+        {
+            int orderId = 0;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.ORDER_ADD",
+                    new SqlParameter("@USER_ID", userId),
+                    new SqlParameter("@ITEM_ID", itemId),
+                    new SqlParameter
+                    {
+                        ParameterName = "@ORDER_ID",
+                        SqlDbType = SqlDbType.Int,
+                        Direction = ParameterDirection.Output
+                    }
+                    );
+
+                await sqlCommand.ExecuteNonQueryAsync();
+
+                if (sqlCommand.Parameters["@ORDER_ID"].Value != DBNull.Value)
+                {
+                    orderId = (int)sqlCommand.Parameters["@ORDER_ID"].Value;
+                }
+
+            }
+
+            return orderId;
         }
 
         // For tests only
