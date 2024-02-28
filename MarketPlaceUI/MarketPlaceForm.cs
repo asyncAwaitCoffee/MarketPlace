@@ -9,7 +9,7 @@ namespace MarketPlaceUI
 {
     public partial class MarketPlaceForm : Form
     {
-        private CurrentForm _currentForm = CurrentForm.Main;         
+        private CurrentForm _currentForm = CurrentForm.Main;
         public MarketPlaceForm()
         {
             InitializeComponent();
@@ -36,6 +36,11 @@ namespace MarketPlaceUI
 
         private async void buttonBrowse_Click(object sender, EventArgs e)
         {
+            if (!LoggingInRequired())
+            {
+                return;
+            }
+
             // TODO - scrollbar issue
             if (_currentForm == CurrentForm.Browse)
             {
@@ -85,6 +90,11 @@ namespace MarketPlaceUI
 
         private async void buttonMyItems_Click(object sender, EventArgs e)
         {
+            if (!LoggingInRequired())
+            {
+                return;
+            }
+
             if (_currentForm == CurrentForm.MyItems)
             {
                 return;
@@ -142,7 +152,7 @@ namespace MarketPlaceUI
             columnDateEnd.HeaderText = "End Date";
             columnDateEnd.Name = "columnDateEnd";
 
-            
+
             //columnEditButton.HeaderText = "Edit";
             //columnEditButton.Name = "columnEditButton";
 
@@ -185,6 +195,11 @@ namespace MarketPlaceUI
 
         private async void buttonHistory_Click(object sender, EventArgs e)
         {
+            if (!LoggingInRequired())
+            {
+                return;
+            }
+
             if (_currentForm == CurrentForm.History)
             {
                 return;
@@ -227,6 +242,19 @@ namespace MarketPlaceUI
                 var row = new DataGridViewRow();
                 row.CreateCells(dataGridView);
 
+                // TODO - also check if operation is Buy or Sell - Place doesnt need color
+                switch (myHistoryItem.OrderState)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        row.DefaultCellStyle.BackColor = Color.Yellow;
+                        break;
+                    case 2:
+                        row.DefaultCellStyle.BackColor = Color.Green;
+                        break;
+                }
+
                 row.Cells[0].Value = myHistoryItem.PartnerId;
                 row.Cells[1].Value = myHistoryItem.MarketItemId;
                 row.Cells[2].Value = myHistoryItem.OperationType;
@@ -244,7 +272,7 @@ namespace MarketPlaceUI
             authForm.ShowDialog();
         }
 
-        
+
 
         // TODO - for all controls?
         private async Task<Image> LoadImageAsync(int itemId)
@@ -267,9 +295,30 @@ namespace MarketPlaceUI
                         tcs.SetResult(Image.FromStream(ms));
                     }
                 });
-            }            
+            }
 
             return await tcs.Task;
+        }
+
+        private void buttonAccount_Click(object sender, EventArgs e)
+        {
+            if (!LoggingInRequired())
+            {
+                return;
+            }
+            AccountForm accountForm = new AccountForm();
+            accountForm.ShowDialog();
+        }
+
+        private bool LoggingInRequired()
+        {
+            if (!User.isLoggedIn)
+            {
+                AuthForm authForm = new AuthForm();
+                authForm.ShowDialog();
+            }
+
+            return User.isLoggedIn;
         }
     }
 }

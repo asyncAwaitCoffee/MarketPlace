@@ -44,6 +44,7 @@
             textBox1 = new TextBox();
             button1 = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
+            buttonAccount = new Button();
             panelMenuLeft.SuspendLayout();
             panelHeader.SuspendLayout();
             panelContent.SuspendLayout();
@@ -52,6 +53,7 @@
             // panelMenuLeft
             // 
             panelMenuLeft.BackColor = Color.Azure;
+            panelMenuLeft.Controls.Add(buttonAccount);
             panelMenuLeft.Controls.Add(buttonAuth);
             panelMenuLeft.Controls.Add(buttonHistory);
             panelMenuLeft.Controls.Add(buttonMyItems);
@@ -243,6 +245,21 @@
             flowLayoutPanel1.Size = new Size(222, 127);
             flowLayoutPanel1.TabIndex = 0;
             // 
+            // buttonAccount
+            // 
+            buttonAccount.BackColor = Color.SkyBlue;
+            buttonAccount.Dock = DockStyle.Bottom;
+            buttonAccount.FlatAppearance.BorderSize = 0;
+            buttonAccount.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
+            buttonAccount.FlatStyle = FlatStyle.Flat;
+            buttonAccount.Location = new Point(0, 473);
+            buttonAccount.Name = "buttonAccount";
+            buttonAccount.Size = new Size(220, 44);
+            buttonAccount.TabIndex = 8;
+            buttonAccount.Text = "Account";
+            buttonAccount.UseVisualStyleBackColor = false;
+            buttonAccount.Click += buttonAccount_Click;
+            // 
             // MarketPlaceForm
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
@@ -281,5 +298,6 @@
         private Button button1;
         private TextBox textBox1;
         private FlowLayoutPanel flowLayoutPanelHeaderControls;
+        private Button buttonAccount;
     }
 }

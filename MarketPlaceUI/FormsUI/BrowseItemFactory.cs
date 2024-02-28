@@ -1,5 +1,6 @@
 ﻿using MarketPlaceLibrary;
 using MarketPlaceLibrary.Models;
+using MarketPlaceUI.Supporting;
 
 namespace MarketPlaceUI.FormsUI
 {
@@ -98,6 +99,10 @@ namespace MarketPlaceUI.FormsUI
                 if (result == DialogResult.OK)
                 {
                     int orderId = await DataAccess.OrderAdd(User.Instance().Id, marketItem.Id);
+                    
+                    await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
+                    await DataAccess.SaveHistory(marketItem.OwnerId, User.Instance().Id, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
+
                     MessageBox.Show($"Order #{orderId} registered.");
                 }
             };

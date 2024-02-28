@@ -140,7 +140,6 @@ namespace MarketPlaceUI
 
                     await DataAccess.SaveHistory(User.Instance().Id, User.Instance().Id, itemId, (int)OperationType.Place, decimal.Parse(textBoxItemPriceStart.Text));
 
-
                     Close();
                     
                 }

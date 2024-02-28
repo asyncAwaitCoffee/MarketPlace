@@ -9,6 +9,7 @@ namespace MarketPlaceLibrary.Models
     public class User
     {
         public static User user = null;
+        public static bool isLoggedIn { get; private set; } = false;
         public int Id { get; private set; }
         public string Name { get; private set; }
         public int UserLevel { get; private set; }
@@ -30,7 +31,8 @@ namespace MarketPlaceLibrary.Models
                 {
                     if (user == null)
                     {
-                        user = new User(userId, userName, userLevel);                        
+                        user = new User(userId, userName, userLevel);
+                        isLoggedIn = true;
                     }
                 }
             }
