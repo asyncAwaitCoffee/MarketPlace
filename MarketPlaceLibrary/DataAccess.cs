@@ -113,7 +113,6 @@ namespace MarketPlaceLibrary
 
                 while (await result.ReadAsync())
                 {
-                    var r = result.GetInt32("ID");
                     marketItems.Add(
                             new MarketItem(
                                     result.GetInt32("ID"),
@@ -268,9 +267,43 @@ namespace MarketPlaceLibrary
 
 
                 await sqlCommand.ExecuteNonQueryAsync();
+                result = 1;
             }
 
-            return 1;
+            return result;
+        }
+
+        public static async Task<List<HistoryItem>> GetHsitory(int userId)
+        {
+            List<HistoryItem> historyItems = new List<HistoryItem>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.HISTORY_GET",
+                    new SqlParameter("@MARKET_USER_ID", userId)
+                    );
+
+                SqlDataReader result = await sqlCommand.ExecuteReaderAsync();
+
+                while (await result.ReadAsync())
+                {
+                    historyItems.Add(
+                            new HistoryItem(
+                                    result.GetInt32("MARKET_USER_ID"),
+                                    result.GetInt32("MARKET_PARTNER_ID"),
+                                    result.GetInt32("MARKET_ITEM_ID"),
+                                    (int)result.GetByte("OPERATION_TYPE"),
+                                    Math.Round(result.GetDecimal("COST"), 2),
+                                    result.GetDateTime("HISTORY_DATE")
+                                )
+                        ); ;
+                }
+            }
+
+            return historyItems;
+
         }
     }
 }

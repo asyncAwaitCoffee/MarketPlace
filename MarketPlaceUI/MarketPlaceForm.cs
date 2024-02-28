@@ -97,6 +97,7 @@ namespace MarketPlaceUI
             DataGridView dataGridView = new DataGridView();
             dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
             dataGridView.Dock = DockStyle.Fill;
 
             DataGridViewTextBoxColumn columnTitle = new DataGridViewTextBoxColumn();
@@ -182,7 +183,7 @@ namespace MarketPlaceUI
             }
         }
 
-        private void buttonHistory_Click(object sender, EventArgs e)
+        private async void buttonHistory_Click(object sender, EventArgs e)
         {
             if (_currentForm == CurrentForm.History)
             {
@@ -194,22 +195,45 @@ namespace MarketPlaceUI
             panelContent.Controls.Clear();
 
             DataGridView dataGridView = new DataGridView();
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
+            dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridView.Dock = DockStyle.Fill;
 
-            DataGridViewTextBoxColumn columnTitle = new DataGridViewTextBoxColumn();
-            DataGridViewTextBoxColumn columnCustomer = new DataGridViewTextBoxColumn();
-            DataGridViewTextBoxColumn columnDateDone = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnPartner = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnItem = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnOperation = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnDate = new DataGridViewTextBoxColumn();
 
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { columnTitle, columnCustomer, columnDateDone });
+            dataGridView.Columns.AddRange([
+                columnPartner, columnItem, columnOperation, columnDate
+                ]);
             dataGridView.Name = "dataGridView1";
 
-            columnTitle.HeaderText = "Title";
-            columnTitle.Name = "columnTitle";
-            columnCustomer.HeaderText = "Customer";
-            columnCustomer.Name = "columnCustomer";
-            columnDateDone.HeaderText = "Date";
-            columnDateDone.Name = "columnDate";
+            columnPartner.HeaderText = "Partner";
+            columnPartner.Name = "columnPartner";
+            columnItem.HeaderText = "Item";
+            columnItem.Name = "columnItem";
+            columnOperation.HeaderText = "Operation";
+            columnOperation.Name = "columnOperation";
+            columnDate.HeaderText = "Date";
+            columnDate.Name = "columnDate";
+
+            List<HistoryItem> myHistoryItems = await DataAccess.GetHsitory(User.Instance().Id);
+
+            foreach (var myHistoryItem in myHistoryItems)
+            {
+                var row = new DataGridViewRow();
+                row.CreateCells(dataGridView);
+
+                row.Cells[0].Value = myHistoryItem.PartnerId;
+                row.Cells[1].Value = myHistoryItem.MarketItemId;
+                row.Cells[2].Value = myHistoryItem.OperationType;
+                row.Cells[3].Value = myHistoryItem.HistoryDate;
+
+                dataGridView.Rows.Add(row);
+            }
 
             panelContent.Controls.Add(dataGridView);
         }
