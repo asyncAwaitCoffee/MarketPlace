@@ -3,11 +3,13 @@ using MarketPlaceLibrary.Models;
 using MarketPlaceUI.FormsUI;
 using System.Diagnostics;
 using System.Windows.Forms;
+using MarketPlaceUI.Supporting;
 
 namespace MarketPlaceUI
 {
     public partial class MarketPlaceForm : Form
     {
+        private CurrentForm _currentForm = CurrentForm.Main;         
         public MarketPlaceForm()
         {
             InitializeComponent();
@@ -15,6 +17,12 @@ namespace MarketPlaceUI
 
         private void buttonMenuMain_Click(object sender, EventArgs e)
         {
+            if (_currentForm == CurrentForm.Main)
+            {
+                return;
+            }
+            _currentForm = CurrentForm.Main;
+
             panelContent.Controls.Clear();
 
             RichTextBox richTextBox = new RichTextBox();
@@ -27,6 +35,12 @@ namespace MarketPlaceUI
 
         private async void buttonBrowse_Click(object sender, EventArgs e)
         {
+            if (_currentForm == CurrentForm.Browse)
+            {
+                return;
+            }
+            _currentForm = CurrentForm.Browse;
+
             panelContent.Controls.Clear();
 
             FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
@@ -46,89 +60,14 @@ namespace MarketPlaceUI
             {
                 Panel panel = new Panel();
                 panel.Size = new Size(300, 300);
+                //panel.Visible = false;
 
-                PictureBox pictureBox = new PictureBox();
-                pictureBox.BackColor = Color.PeachPuff;
-                pictureBox.Size = new Size(300, 200);
-
-
-                Label label = new Label();
-                label.Text = marketItem.Title;
-                label.Top = pictureBox.Height - label.Height;
-                label.Left = 0;
-                label.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-                label.BackColor = Color.Transparent;
+                PictureBox pictureBox = BrowseItemFactory.BuildBrowseHeaderBox(marketItem);
 
                 // TODO - simplify?
-                Task.Run(() =>
-                {
-                    pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                    pictureBox.Image = LoadImageAsync(marketItem.Id).Result;
-                });
+                Task.Run(() => { pictureBox.Image = LoadImageAsync(marketItem.Id).Result; });
 
-
-                pictureBox.Controls.Add(label);
-
-                TableLayoutPanel panelInner = new TableLayoutPanel();
-                panelInner.Size = new Size(300, 100);
-                panelInner.Dock = DockStyle.Bottom;
-                panelInner.ColumnCount = 1;
-                panelInner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-                panelInner.RowCount = 2;
-                panelInner.RowStyles.Add(new RowStyle(SizeType.Absolute, 60));
-                panelInner.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
-                panelInner.Padding = new Padding(0);
-                panelInner.Margin = new Padding(0);
-                panelInner.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
-
-                TextBox textBox = new TextBox();
-                textBox.Multiline = true;
-                textBox.Location = new Point(0, 0);
-                //textBox.ScrollBars = ScrollBars.Vertical;
-                textBox.BackColor = Color.WhiteSmoke;
-                textBox.BorderStyle = BorderStyle.None;
-                textBox.Dock = DockStyle.Fill;
-                //textBox.Size = new Size(300, 200);
-                textBox.Margin = new Padding(0);
-                textBox.Text = marketItem.Description;
-                textBox.ReadOnly = true;
-
-                Panel controlWrapperPanel = new Panel();
-                controlWrapperPanel.Dock = DockStyle.Fill;
-                controlWrapperPanel.Padding = new Padding(0);
-                controlWrapperPanel.Margin = new Padding(0);
-                controlWrapperPanel.BackColor = UISettings.Colors[0];
-
-                FlowLayoutPanel panelControlsLeft = new FlowLayoutPanel();
-                //panelControlsLeft.Dock = DockStyle.Left;
-                panelControlsLeft.Size = new Size(150, 40);
-                panelControlsLeft.Padding = new Padding(0);
-                panelControlsLeft.Margin = new Padding(0);
-                panelControlsLeft.FlowDirection = FlowDirection.LeftToRight;
-                Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", "?", ButtonSize.Tiny, new Point(0, 0));
-                Button buttonFav = ButtonFactory.BuildButton("buttonFav", "Fav", ButtonSize.Tiny, new Point(0, 0));
-                
-                buttonInfo.Click += (object sender, EventArgs e) => { ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog(); };
-
-                panelControlsLeft.Controls.AddRange([buttonInfo, buttonFav]);
-
-                FlowLayoutPanel panelControlsRight = new FlowLayoutPanel();
-                //panelControlsRight.Dock = DockStyle.Right;
-                panelControlsRight.Size = new Size(150, 40);
-                panelControlsRight.Padding = new Padding(0);
-                panelControlsRight.Left = 150;
-                panelControlsRight.FlowDirection = FlowDirection.RightToLeft;
-                Button buttonBid = ButtonFactory.BuildButton("buttonBid", "Bid", ButtonSize.Small, new Point(0, 0));
-                Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", "Buy", ButtonSize.Small, new Point(0, 0));
-
-
-                panelControlsRight.Controls.AddRange([buttonBuy, buttonBid]);
-
-                controlWrapperPanel.Controls.Add(panelControlsLeft);
-                controlWrapperPanel.Controls.Add(panelControlsRight);
-
-                panelInner.Controls.Add(textBox);
-                panelInner.Controls.Add(controlWrapperPanel);
+                TableLayoutPanel panelInner = BrowseItemFactory.BuildBrowseFooterBox(marketItem);
 
                 panel.Controls.Add(pictureBox);
                 panel.Controls.Add(panelInner);
@@ -142,6 +81,12 @@ namespace MarketPlaceUI
 
         private void buttonMyItems_Click(object sender, EventArgs e)
         {
+            if (_currentForm == CurrentForm.MyItems)
+            {
+                return;
+            }
+            _currentForm = CurrentForm.MyItems;
+
             panelContent.Controls.Clear();
 
             DataGridView dataGridView = new DataGridView();
@@ -169,6 +114,12 @@ namespace MarketPlaceUI
 
         private void buttonFavorite_Click(object sender, EventArgs e)
         {
+            if (_currentForm == CurrentForm.Favorites)
+            {
+                return;
+            }
+            _currentForm = CurrentForm.Favorites;
+
             panelContent.Controls.Clear();
 
             FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
@@ -208,6 +159,12 @@ namespace MarketPlaceUI
 
         private void buttonHistory_Click(object sender, EventArgs e)
         {
+            if (_currentForm == CurrentForm.History)
+            {
+                return;
+            }
+            _currentForm = CurrentForm.History;
+
             panelContent.Controls.Clear();
 
             DataGridView dataGridView = new DataGridView();
