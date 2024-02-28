@@ -1,6 +1,7 @@
 ﻿using MarketPlaceLibrary;
 using MarketPlaceLibrary.Models;
 using MarketPlaceUI.FormsUI;
+using MarketPlaceUI.Supporting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -134,8 +135,13 @@ namespace MarketPlaceUI
                     // TODO - message for no imagePath ??
                     if (imagePath.Length > 0 && File.Exists(imagePath))
                     {
-                        DataAccess.SaveImageToDatabase(itemId, imagePath);
+                        await DataAccess.SaveImageToDatabase(itemId, imagePath);
                     }
+
+                    await DataAccess.SaveHistory(User.Instance().Id, User.Instance().Id, itemId, (int)OperationType.Place, decimal.Parse(textBoxItemPriceStart.Text));
+
+
+                    Close();
                     
                 }
             }

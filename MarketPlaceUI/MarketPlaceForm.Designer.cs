@@ -32,19 +32,18 @@
             panelMenuLeft = new Panel();
             buttonAuth = new Button();
             buttonHistory = new Button();
-            buttonFavorite = new Button();
             buttonMyItems = new Button();
             buttonBrowse = new Button();
             buttonMenuMain = new Button();
             panel1 = new Panel();
             panelHeader = new Panel();
+            flowLayoutPanelHeaderControls = new FlowLayoutPanel();
             buttonCart = new Button();
             buttonMails = new Button();
             panelContent = new Panel();
             textBox1 = new TextBox();
             button1 = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            flowLayoutPanelHeaderControls = new FlowLayoutPanel();
             panelMenuLeft.SuspendLayout();
             panelHeader.SuspendLayout();
             panelContent.SuspendLayout();
@@ -55,7 +54,6 @@
             panelMenuLeft.BackColor = Color.Azure;
             panelMenuLeft.Controls.Add(buttonAuth);
             panelMenuLeft.Controls.Add(buttonHistory);
-            panelMenuLeft.Controls.Add(buttonFavorite);
             panelMenuLeft.Controls.Add(buttonMyItems);
             panelMenuLeft.Controls.Add(buttonBrowse);
             panelMenuLeft.Controls.Add(buttonMenuMain);
@@ -90,7 +88,7 @@
             buttonHistory.FlatAppearance.BorderSize = 0;
             buttonHistory.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonHistory.FlatStyle = FlatStyle.Flat;
-            buttonHistory.Location = new Point(0, 217);
+            buttonHistory.Location = new Point(0, 173);
             buttonHistory.Margin = new Padding(4);
             buttonHistory.Name = "buttonHistory";
             buttonHistory.Size = new Size(220, 44);
@@ -98,23 +96,6 @@
             buttonHistory.Text = "History";
             buttonHistory.UseVisualStyleBackColor = false;
             buttonHistory.Click += buttonHistory_Click;
-            // 
-            // buttonFavorite
-            // 
-            buttonFavorite.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            buttonFavorite.BackColor = Color.LightSkyBlue;
-            buttonFavorite.Dock = DockStyle.Top;
-            buttonFavorite.FlatAppearance.BorderSize = 0;
-            buttonFavorite.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
-            buttonFavorite.FlatStyle = FlatStyle.Flat;
-            buttonFavorite.Location = new Point(0, 173);
-            buttonFavorite.Margin = new Padding(4);
-            buttonFavorite.Name = "buttonFavorite";
-            buttonFavorite.Size = new Size(220, 44);
-            buttonFavorite.TabIndex = 6;
-            buttonFavorite.Text = "Favorite";
-            buttonFavorite.UseVisualStyleBackColor = false;
-            buttonFavorite.Click += buttonFavorite_Click;
             // 
             // buttonMyItems
             // 
@@ -192,6 +173,14 @@
             panelHeader.Size = new Size(964, 50);
             panelHeader.TabIndex = 1;
             // 
+            // flowLayoutPanelHeaderControls
+            // 
+            flowLayoutPanelHeaderControls.BackColor = Color.SkyBlue;
+            flowLayoutPanelHeaderControls.Location = new Point(5, 5);
+            flowLayoutPanelHeaderControls.Name = "flowLayoutPanelHeaderControls";
+            flowLayoutPanelHeaderControls.Size = new Size(800, 40);
+            flowLayoutPanelHeaderControls.TabIndex = 2;
+            // 
             // buttonCart
             // 
             buttonCart.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
@@ -254,14 +243,6 @@
             flowLayoutPanel1.Size = new Size(222, 127);
             flowLayoutPanel1.TabIndex = 0;
             // 
-            // flowLayoutPanelHeaderControls
-            // 
-            flowLayoutPanelHeaderControls.BackColor = Color.SkyBlue;
-            flowLayoutPanelHeaderControls.Location = new Point(5, 5);
-            flowLayoutPanelHeaderControls.Name = "flowLayoutPanelHeaderControls";
-            flowLayoutPanelHeaderControls.Size = new Size(800, 40);
-            flowLayoutPanelHeaderControls.TabIndex = 2;
-            // 
             // MarketPlaceForm
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
@@ -290,7 +271,6 @@
         private Panel panel1;
         private Button buttonMenuMain;
         private Button buttonHistory;
-        private Button buttonFavorite;
         private Button buttonMyItems;
         private Button buttonBrowse;
         private Button buttonMails;
