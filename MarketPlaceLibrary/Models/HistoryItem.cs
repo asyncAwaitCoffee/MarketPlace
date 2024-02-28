@@ -14,5 +14,6 @@ namespace MarketPlaceLibrary.Models
         public int OperationType { get; set; } = operationType;
         public decimal Cost { get; set; } = cost;
         public DateTime HistoryDate { get; set; } = historyDate;
+        public byte OrderState { get; set; } = 0;
     }
 }

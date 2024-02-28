@@ -298,7 +298,10 @@ namespace MarketPlaceLibrary
                                     Math.Round(result.GetDecimal("COST"), 2),
                                     result.GetDateTime("HISTORY_DATE")
                                 )
-                        ); ;
+                            {
+                                OrderState = result.IsDBNull(result.GetOrdinal("ORDER_STATE")) ? (byte)0 : result.GetByte("ORDER_STATE")
+                            }
+                        );
                 }
             }
 
