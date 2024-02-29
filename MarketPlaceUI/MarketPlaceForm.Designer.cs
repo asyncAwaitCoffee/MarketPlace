@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MarketPlaceForm));
             panelMenuLeft = new Panel();
             labelBalance = new Label();
+            labelLogin = new Label();
             buttonAccount = new Button();
             buttonAuth = new Button();
             buttonHistory = new Button();
@@ -39,24 +40,21 @@
             buttonBrowse = new Button();
             buttonMenuMain = new Button();
             panel1 = new Panel();
-            labelLogin = new Label();
             panelHeader = new Panel();
             flowLayoutPanelHeaderControls = new FlowLayoutPanel();
             buttonMails = new Button();
             imageList = new ImageList(components);
             panelContent = new Panel();
-            textBox1 = new TextBox();
-            button1 = new Button();
-            flowLayoutPanel1 = new FlowLayoutPanel();
+            panel2 = new Panel();
             panelMenuLeft.SuspendLayout();
             panelHeader.SuspendLayout();
-            panelContent.SuspendLayout();
             SuspendLayout();
             // 
             // panelMenuLeft
             // 
             panelMenuLeft.BackColor = Color.Azure;
             panelMenuLeft.Controls.Add(labelBalance);
+            panelMenuLeft.Controls.Add(labelLogin);
             panelMenuLeft.Controls.Add(buttonAccount);
             panelMenuLeft.Controls.Add(buttonAuth);
             panelMenuLeft.Controls.Add(buttonHistory);
@@ -75,11 +73,22 @@
             // 
             labelBalance.AutoSize = true;
             labelBalance.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            labelBalance.Location = new Point(75, 317);
+            labelBalance.Location = new Point(81, 375);
             labelBalance.Name = "labelBalance";
             labelBalance.Size = new Size(54, 45);
             labelBalance.TabIndex = 9;
             labelBalance.Text = "0$";
+            // 
+            // labelLogin
+            // 
+            labelLogin.AutoSize = true;
+            labelLogin.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelLogin.ForeColor = Color.Black;
+            labelLogin.Location = new Point(68, 327);
+            labelLogin.Name = "labelLogin";
+            labelLogin.Size = new Size(84, 37);
+            labelLogin.TabIndex = 3;
+            labelLogin.Text = "Login";
             // 
             // buttonAccount
             // 
@@ -119,7 +128,7 @@
             buttonHistory.FlatAppearance.BorderSize = 0;
             buttonHistory.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonHistory.FlatStyle = FlatStyle.Flat;
-            buttonHistory.Location = new Point(0, 173);
+            buttonHistory.Location = new Point(0, 232);
             buttonHistory.Margin = new Padding(4);
             buttonHistory.Name = "buttonHistory";
             buttonHistory.Size = new Size(220, 44);
@@ -136,7 +145,7 @@
             buttonMyItems.FlatAppearance.BorderSize = 0;
             buttonMyItems.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonMyItems.FlatStyle = FlatStyle.Flat;
-            buttonMyItems.Location = new Point(0, 129);
+            buttonMyItems.Location = new Point(0, 188);
             buttonMyItems.Margin = new Padding(4);
             buttonMyItems.Name = "buttonMyItems";
             buttonMyItems.Size = new Size(220, 44);
@@ -153,7 +162,7 @@
             buttonBrowse.FlatAppearance.BorderSize = 0;
             buttonBrowse.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonBrowse.FlatStyle = FlatStyle.Flat;
-            buttonBrowse.Location = new Point(0, 85);
+            buttonBrowse.Location = new Point(0, 144);
             buttonBrowse.Margin = new Padding(4);
             buttonBrowse.Name = "buttonBrowse";
             buttonBrowse.Size = new Size(220, 44);
@@ -170,7 +179,7 @@
             buttonMenuMain.FlatAppearance.BorderSize = 0;
             buttonMenuMain.FlatAppearance.MouseDownBackColor = Color.SkyBlue;
             buttonMenuMain.FlatStyle = FlatStyle.Flat;
-            buttonMenuMain.Location = new Point(0, 41);
+            buttonMenuMain.Location = new Point(0, 100);
             buttonMenuMain.Margin = new Padding(4);
             buttonMenuMain.Name = "buttonMenuMain";
             buttonMenuMain.Size = new Size(220, 44);
@@ -187,25 +196,14 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(220, 41);
+            panel1.Size = new Size(220, 100);
             panel1.TabIndex = 2;
-            // 
-            // labelLogin
-            // 
-            labelLogin.AutoSize = true;
-            labelLogin.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            labelLogin.ForeColor = Color.Black;
-            labelLogin.Location = new Point(802, 5);
-            labelLogin.Name = "labelLogin";
-            labelLogin.Size = new Size(84, 37);
-            labelLogin.TabIndex = 3;
-            labelLogin.Text = "Login";
             // 
             // panelHeader
             // 
             panelHeader.BackColor = SystemColors.ActiveCaption;
+            panelHeader.Controls.Add(panel2);
             panelHeader.Controls.Add(flowLayoutPanelHeaderControls);
-            panelHeader.Controls.Add(labelLogin);
             panelHeader.Controls.Add(buttonMails);
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(220, 0);
@@ -220,7 +218,7 @@
             flowLayoutPanelHeaderControls.BackColor = Color.SkyBlue;
             flowLayoutPanelHeaderControls.Location = new Point(5, 5);
             flowLayoutPanelHeaderControls.Name = "flowLayoutPanelHeaderControls";
-            flowLayoutPanelHeaderControls.Size = new Size(800, 40);
+            flowLayoutPanelHeaderControls.Size = new Size(872, 40);
             flowLayoutPanelHeaderControls.TabIndex = 2;
             // 
             // buttonMails
@@ -230,7 +228,7 @@
             buttonMails.FlatStyle = FlatStyle.Flat;
             buttonMails.ImageIndex = 0;
             buttonMails.ImageList = imageList;
-            buttonMails.Location = new Point(915, 5);
+            buttonMails.Location = new Point(889, 5);
             buttonMails.Margin = new Padding(0);
             buttonMails.Name = "buttonMails";
             buttonMails.Size = new Size(40, 40);
@@ -248,40 +246,19 @@
             // panelContent
             // 
             panelContent.BackColor = SystemColors.ActiveBorder;
-            panelContent.Controls.Add(textBox1);
-            panelContent.Controls.Add(button1);
-            panelContent.Controls.Add(flowLayoutPanel1);
             panelContent.Dock = DockStyle.Fill;
             panelContent.Location = new Point(220, 50);
             panelContent.Name = "panelContent";
             panelContent.Size = new Size(964, 511);
             panelContent.TabIndex = 3;
             // 
-            // textBox1
+            // panel2
             // 
-            textBox1.Enabled = false;
-            textBox1.Location = new Point(650, 153);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 29);
-            textBox1.TabIndex = 2;
-            textBox1.Text = "asd";
-            // 
-            // button1
-            // 
-            button1.Image = (Image)resources.GetObject("button1.Image");
-            button1.Location = new Point(417, 288);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 67);
-            button1.TabIndex = 1;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
-            // 
-            // flowLayoutPanel1
-            // 
-            flowLayoutPanel1.Location = new Point(268, 133);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(222, 127);
-            flowLayoutPanel1.TabIndex = 0;
+            panel2.BackColor = Color.SkyBlue;
+            panel2.Location = new Point(940, 5);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(21, 39);
+            panel2.TabIndex = 3;
             // 
             // MarketPlaceForm
             // 
@@ -300,9 +277,6 @@
             panelMenuLeft.ResumeLayout(false);
             panelMenuLeft.PerformLayout();
             panelHeader.ResumeLayout(false);
-            panelHeader.PerformLayout();
-            panelContent.ResumeLayout(false);
-            panelContent.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -318,13 +292,11 @@
         private Button buttonMails;
         private Panel panelContent;
         private Button buttonAuth;
-        private FlowLayoutPanel flowLayoutPanel1;
-        private Button button1;
-        private TextBox textBox1;
         private FlowLayoutPanel flowLayoutPanelHeaderControls;
         private Button buttonAccount;
         private ImageList imageList;
         private Label labelLogin;
         private Label labelBalance;
+        private Panel panel2;
     }
 }

@@ -178,8 +178,7 @@ namespace MarketPlaceLibrary
 
         public static async Task<List<MarketItem>> GetMarketItems(
             int pageNo, int pageCount, int userId, byte? itemCategory = null, int? highestBidder = null,
-            bool filterByOwnerId = false, bool orderByPriceAsc = false, bool orderByPriceDesc = false,
-            bool orderByDateAsc = false, bool orderByDateDesc = false
+            bool filterByOwnerId = false, int? orderByPrice = null, int? orderByDate = null
             )
         {
             List<MarketItem> marketItems = new List<MarketItem>();
@@ -195,10 +194,8 @@ namespace MarketPlaceLibrary
                     new SqlParameter("@MARKET_USER_ID", userId),
                     new SqlParameter("@FILTER_BY_HIGHEST_BIDDER", highestBidder),
                     new SqlParameter("@FILTER_BY_OWNER_ID", filterByOwnerId),
-                    new SqlParameter("@ORDER_BY_PRICE_ASC", orderByPriceAsc),
-                    new SqlParameter("@ORDER_BY_PRICE_DESC", orderByPriceDesc),
-                    new SqlParameter("@ORDER_BY_DATE_ASC", orderByDateAsc),
-                    new SqlParameter("@ORDER_BY_DATE_DESC", orderByDateDesc)
+                    new SqlParameter("@ORDER_BY_PRICE", orderByPrice),
+                    new SqlParameter("@ORDER_BY_DATE", orderByDate)
                     );
 
                 SqlDataReader result = await sqlCommand.ExecuteReaderAsync();
