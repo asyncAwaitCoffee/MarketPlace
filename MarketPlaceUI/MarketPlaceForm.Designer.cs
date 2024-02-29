@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MarketPlaceForm));
             panelMenuLeft = new Panel();
+            buttonAccount = new Button();
             buttonAuth = new Button();
             buttonHistory = new Button();
             buttonMyItems = new Button();
@@ -38,13 +40,13 @@
             panel1 = new Panel();
             panelHeader = new Panel();
             flowLayoutPanelHeaderControls = new FlowLayoutPanel();
-            buttonCart = new Button();
             buttonMails = new Button();
+            imageList = new ImageList(components);
             panelContent = new Panel();
             textBox1 = new TextBox();
             button1 = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            buttonAccount = new Button();
+            labelLogin = new Label();
             panelMenuLeft.SuspendLayout();
             panelHeader.SuspendLayout();
             panelContent.SuspendLayout();
@@ -66,6 +68,21 @@
             panelMenuLeft.Name = "panelMenuLeft";
             panelMenuLeft.Size = new Size(220, 561);
             panelMenuLeft.TabIndex = 0;
+            // 
+            // buttonAccount
+            // 
+            buttonAccount.BackColor = Color.SkyBlue;
+            buttonAccount.Dock = DockStyle.Bottom;
+            buttonAccount.FlatAppearance.BorderSize = 0;
+            buttonAccount.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
+            buttonAccount.FlatStyle = FlatStyle.Flat;
+            buttonAccount.Location = new Point(0, 473);
+            buttonAccount.Name = "buttonAccount";
+            buttonAccount.Size = new Size(220, 44);
+            buttonAccount.TabIndex = 8;
+            buttonAccount.Text = "Account";
+            buttonAccount.UseVisualStyleBackColor = false;
+            buttonAccount.Click += buttonAccount_Click;
             // 
             // buttonAuth
             // 
@@ -164,8 +181,8 @@
             // panelHeader
             // 
             panelHeader.BackColor = SystemColors.ActiveCaption;
+            panelHeader.Controls.Add(labelLogin);
             panelHeader.Controls.Add(flowLayoutPanelHeaderControls);
-            panelHeader.Controls.Add(buttonCart);
             panelHeader.Controls.Add(buttonMails);
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(220, 0);
@@ -183,29 +200,27 @@
             flowLayoutPanelHeaderControls.Size = new Size(800, 40);
             flowLayoutPanelHeaderControls.TabIndex = 2;
             // 
-            // buttonCart
-            // 
-            buttonCart.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonCart.FlatStyle = FlatStyle.Flat;
-            buttonCart.Location = new Point(922, 11);
-            buttonCart.Margin = new Padding(0);
-            buttonCart.Name = "buttonCart";
-            buttonCart.Size = new Size(40, 40);
-            buttonCart.TabIndex = 1;
-            buttonCart.Text = "C";
-            buttonCart.UseVisualStyleBackColor = true;
-            // 
             // buttonMails
             // 
             buttonMails.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonMails.FlatAppearance.BorderSize = 0;
             buttonMails.FlatStyle = FlatStyle.Flat;
-            buttonMails.Location = new Point(880, 11);
+            buttonMails.ImageIndex = 0;
+            buttonMails.ImageList = imageList;
+            buttonMails.Location = new Point(915, 5);
             buttonMails.Margin = new Padding(0);
             buttonMails.Name = "buttonMails";
             buttonMails.Size = new Size(40, 40);
             buttonMails.TabIndex = 0;
-            buttonMails.Text = "M";
             buttonMails.UseVisualStyleBackColor = true;
+            // 
+            // imageList
+            // 
+            imageList.ColorDepth = ColorDepth.Depth32Bit;
+            imageList.ImageStream = (ImageListStreamer)resources.GetObject("imageList.ImageStream");
+            imageList.TransparentColor = Color.Transparent;
+            imageList.Images.SetKeyName(0, "email.png");
+            imageList.Images.SetKeyName(1, "email_new.png");
             // 
             // panelContent
             // 
@@ -245,20 +260,16 @@
             flowLayoutPanel1.Size = new Size(222, 127);
             flowLayoutPanel1.TabIndex = 0;
             // 
-            // buttonAccount
+            // labelLogin
             // 
-            buttonAccount.BackColor = Color.SkyBlue;
-            buttonAccount.Dock = DockStyle.Bottom;
-            buttonAccount.FlatAppearance.BorderSize = 0;
-            buttonAccount.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
-            buttonAccount.FlatStyle = FlatStyle.Flat;
-            buttonAccount.Location = new Point(0, 473);
-            buttonAccount.Name = "buttonAccount";
-            buttonAccount.Size = new Size(220, 44);
-            buttonAccount.TabIndex = 8;
-            buttonAccount.Text = "Account";
-            buttonAccount.UseVisualStyleBackColor = false;
-            buttonAccount.Click += buttonAccount_Click;
+            labelLogin.AutoSize = true;
+            labelLogin.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelLogin.ForeColor = Color.White;
+            labelLogin.Location = new Point(830, 11);
+            labelLogin.Name = "labelLogin";
+            labelLogin.Size = new Size(64, 30);
+            labelLogin.TabIndex = 3;
+            labelLogin.Text = "Login";
             // 
             // MarketPlaceForm
             // 
@@ -276,6 +287,7 @@
             Text = "Form1";
             panelMenuLeft.ResumeLayout(false);
             panelHeader.ResumeLayout(false);
+            panelHeader.PerformLayout();
             panelContent.ResumeLayout(false);
             panelContent.PerformLayout();
             ResumeLayout(false);
@@ -291,7 +303,6 @@
         private Button buttonMyItems;
         private Button buttonBrowse;
         private Button buttonMails;
-        private Button buttonCart;
         private Panel panelContent;
         private Button buttonAuth;
         private FlowLayoutPanel flowLayoutPanel1;
@@ -299,5 +310,7 @@
         private TextBox textBox1;
         private FlowLayoutPanel flowLayoutPanelHeaderControls;
         private Button buttonAccount;
+        private ImageList imageList;
+        private Label labelLogin;
     }
 }

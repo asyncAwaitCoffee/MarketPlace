@@ -1,8 +1,6 @@
 using MarketPlaceLibrary;
 using MarketPlaceLibrary.Models;
 using MarketPlaceUI.FormsUI;
-using System.Diagnostics;
-using System.Windows.Forms;
 using MarketPlaceUI.Supporting;
 
 namespace MarketPlaceUI
@@ -13,6 +11,27 @@ namespace MarketPlaceUI
         public MarketPlaceForm()
         {
             InitializeComponent();
+            TryLoggedInAsSaved();
+
+
+
+        }
+
+        private async void TryLoggedInAsSaved()
+        {
+            if (File.Exists("./stay_logged_in.txt"))
+            {
+                // TODO - better checkBoxStayLoggedIn auth
+                string[] userData = await File.ReadAllLinesAsync("./stay_logged_in.txt");
+
+                string userLogin = userData[1];
+
+                if (int.TryParse(userData[0], out int userId) && int.TryParse(userData[2], out int userLevel))
+                {
+                    User.Init(userId, userLogin, userLevel);
+                    labelLogin.Text = userLogin;
+                }                
+            }            
         }
 
         private void buttonMenuMain_Click(object sender, EventArgs e)
@@ -268,7 +287,7 @@ namespace MarketPlaceUI
 
         private void buttonAuth_Click(object sender, EventArgs e)
         {
-            AuthForm authForm = new AuthForm();
+            AuthForm authForm = new AuthForm(labelLogin);
             authForm.ShowDialog();
         }
 
@@ -314,7 +333,7 @@ namespace MarketPlaceUI
         {
             if (!User.isLoggedIn)
             {
-                AuthForm authForm = new AuthForm();
+                AuthForm authForm = new AuthForm(labelLogin);
                 authForm.ShowDialog();
             }
 

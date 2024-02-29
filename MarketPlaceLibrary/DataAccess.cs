@@ -44,6 +44,59 @@ namespace MarketPlaceLibrary
             return 1;
         }
 
+        public static async Task<byte> UpdateUserPersonData(int userId, string personName, string email, int? countryId = null, int? cityId = null)
+        {
+            byte result = 0;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.USER_PERSON_DATA_UPDATE",
+                    new SqlParameter("@USER_ID", userId),
+                    new SqlParameter("@PERSON_NAME", personName),
+                    new SqlParameter("@EMAIL", email),
+                    new SqlParameter("@COUNTRY_ID", countryId),
+                    new SqlParameter("@CITY_ID", cityId)
+                    );
+
+
+                await sqlCommand.ExecuteNonQueryAsync();
+
+                result = 1;
+            }
+
+            return result;
+        }
+
+        public static async Task<Person?> GetUserPersonData(int userId)
+        {
+            Person? person = null;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.USER_PERSON_DATA_GET",
+                    new SqlParameter("@USER_ID", userId)
+                    );
+
+
+                SqlDataReader result = await sqlCommand.ExecuteReaderAsync();
+
+                while (await result.ReadAsync())
+                {
+                    person = new Person(
+                                    userId,                                    
+                                    Math.Round(result.GetDecimal("BALANCE"), 2))
+                                {
+                                    Name = result.IsDBNull(result.GetOrdinal("PERSON_NAME")) ? null : result.GetString("PERSON_NAME"),
+                                    Email = result.IsDBNull(result.GetOrdinal("EMAIL")) ? null : result.GetString("EMAIL"),
+                    };
+                }
+            }
+
+            return person;
+        }
+
         public static async Task<(int?, int?)> TryUserLogin(string userLogin, string password)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -85,7 +138,7 @@ namespace MarketPlaceLibrary
             }
         }
         public static async Task<List<MarketItem>> GetMarketItems(
-            int pageNo, int pageCount, int ownerId, byte? itemCategory = null, int? highestBidder = null,
+            int pageNo, int pageCount, int userId, byte? itemCategory = null, int? highestBidder = null,
             bool filterByOwnerId = false, bool orderByPriceAsc = false, bool orderByPriceDesc = false,
             bool orderByDateAsc = false, bool orderByDateDesc = false
             )
@@ -100,8 +153,8 @@ namespace MarketPlaceLibrary
                     new SqlParameter("@PAGE_NO", pageNo),
                     new SqlParameter("@PAGE_COUNT", pageCount),
                     new SqlParameter("@ITEM_CATEGORY", itemCategory),
-                    new SqlParameter("@OWNER_ID", ownerId),
-                    new SqlParameter("@HIGHEST_BIDDER", highestBidder),
+                    new SqlParameter("@MARKET_USER_ID", userId),
+                    new SqlParameter("@FILTER_BY_HIGHEST_BIDDER", highestBidder),
                     new SqlParameter("@FILTER_BY_OWNER_ID", filterByOwnerId),
                     new SqlParameter("@ORDER_BY_PRICE_ASC", orderByPriceAsc),
                     new SqlParameter("@ORDER_BY_PRICE_DESC", orderByPriceDesc),
@@ -124,6 +177,8 @@ namespace MarketPlaceLibrary
                                 )
                             {
                                 Description = result.GetString("ITEM_DESCRIPTION"),
+                                BidStep = result.IsDBNull(result.GetOrdinal("BID_STEP")) ? 0 : result.GetDecimal("BID_STEP"),
+                                PriceCurrent = result.IsDBNull(result.GetOrdinal("CURRENT_PRICE")) ? 0 : result.GetDecimal("CURRENT_PRICE"),
                             }
                         ); ;
                 }
@@ -133,7 +188,7 @@ namespace MarketPlaceLibrary
 
         }
 
-        public static async Task<int> OrderAdd(int userId, int itemId)
+        public static async Task<int> AddItemToOrder(int userId, int itemId)
         {
             int orderId = 0;
 
@@ -141,7 +196,7 @@ namespace MarketPlaceLibrary
             {
                 SqlCommand sqlCommand = await CreateSqlCommand(
                     connection,
-                    "MARKET_PLACE.ORDER_ADD",
+                    "MARKET_PLACE.ITEM_ADD_TO_ORDER",
                     new SqlParameter("@USER_ID", userId),
                     new SqlParameter("@ITEM_ID", itemId),
                     new SqlParameter
@@ -205,7 +260,38 @@ namespace MarketPlaceLibrary
             return itemId;
         }
 
-        // For tests only
+        public static async Task<int> BidItem(int userId, int itemId)
+        {
+            int bidResult = 0;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.ITEM_BID",
+                    new SqlParameter("@USER_ID", userId),
+                    new SqlParameter("@ITEM_ID", itemId),
+                    new SqlParameter
+                    {
+                        ParameterName = "@BID_RESULT",
+                        SqlDbType = SqlDbType.Int,
+                        Direction = ParameterDirection.Output
+                    }
+                    );
+
+                await sqlCommand.ExecuteNonQueryAsync();
+
+                if (sqlCommand.Parameters["@BID_RESULT"].Value != DBNull.Value)
+                {
+                    bidResult = (int)sqlCommand.Parameters["@BID_RESULT"].Value;
+                }
+
+            }
+
+            return bidResult;
+        }
+
+        // TODO - For tests only ??
         public static async Task<int> SaveImageToDatabase(int itemId, string imagePath)
         {
             byte[] imageData;
@@ -231,7 +317,7 @@ namespace MarketPlaceLibrary
             return 1;
         }
 
-        // For tests only
+        // TODO - For tests only
         public static async Task<byte[]> RetrieveImageFromDatabase(int itemId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
