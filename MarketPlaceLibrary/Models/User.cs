@@ -13,17 +13,18 @@ namespace MarketPlaceLibrary.Models
         public int Id { get; private set; }
         public string Name { get; private set; }
         public int UserLevel { get; private set; }
-        public List<MarketItem> Cart { get; private set; } = new List<MarketItem>();
+        public decimal Balance { get; private set; }
         private static object locker = new object();
 
-        private User(int userId, string userName, int userLevel)
+        private User(int userId, string userName, int userLevel, decimal balance)
         {
             Id = userId;
             Name = userName;
             UserLevel = userLevel;
+            Balance = balance;
         }
 
-        public static void Init(int userId, string userName, int userLevel)
+        public static void Init(int userId, string userName, int userLevel, decimal balance)
         {
             if (user == null)
             {
@@ -31,7 +32,7 @@ namespace MarketPlaceLibrary.Models
                 {
                     if (user == null)
                     {
-                        user = new User(userId, userName, userLevel);
+                        user = new User(userId, userName, userLevel, balance);
                         isLoggedIn = true;
                     }
                 }

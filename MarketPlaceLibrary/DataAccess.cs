@@ -84,12 +84,10 @@ namespace MarketPlaceLibrary
 
                 while (await result.ReadAsync())
                 {
-                    person = new Person(
-                                    userId,                                    
-                                    Math.Round(result.GetDecimal("BALANCE"), 2))
-                                {
-                                    Name = result.IsDBNull(result.GetOrdinal("PERSON_NAME")) ? null : result.GetString("PERSON_NAME"),
-                                    Email = result.IsDBNull(result.GetOrdinal("EMAIL")) ? null : result.GetString("EMAIL"),
+                    person = new Person(userId)
+                    {
+                        Name = result.IsDBNull(result.GetOrdinal("PERSON_NAME")) ? null : result.GetString("PERSON_NAME"),
+                        Email = result.IsDBNull(result.GetOrdinal("EMAIL")) ? null : result.GetString("EMAIL"),
                     };
                 }
             }
@@ -97,7 +95,7 @@ namespace MarketPlaceLibrary
             return person;
         }
 
-        public static async Task<(int?, int?)> TryUserLogin(string userLogin, string password)
+        public static async Task<(int?, int?, decimal?)> TryUserLogin(string userLogin, string password)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -121,22 +119,63 @@ namespace MarketPlaceLibrary
                             ParameterName = "@USER_LEVEL",
                             SqlDbType = SqlDbType.Int,
                             Direction = ParameterDirection.Output
+                        },
+                        new SqlParameter
+                        {
+                            ParameterName = "@BALANCE",
+                            SqlDbType = SqlDbType.Decimal,
+                            Direction = ParameterDirection.Output
                         }
                     );
 
                 await sqlCommand.ExecuteNonQueryAsync();
 
-                if (sqlCommand.Parameters["@USER_ID"].Value != DBNull.Value && sqlCommand.Parameters["@USER_LEVEL"].Value != DBNull.Value)
+                if (sqlCommand.Parameters["@USER_ID"].Value != DBNull.Value
+                    && sqlCommand.Parameters["@USER_LEVEL"].Value != DBNull.Value
+                    && sqlCommand.Parameters["@BALANCE"].Value != DBNull.Value)
                 {
                     int userId = (int)sqlCommand.Parameters["@USER_ID"].Value;
                     int permissionsLevel = (int)sqlCommand.Parameters["@USER_LEVEL"].Value;
-                    return (userId, permissionsLevel);
+                    decimal balance = (decimal)sqlCommand.Parameters["@BALANCE"].Value;
+
+                    return (userId, permissionsLevel, balance);
                 }
 
-                return (null, null);
+                return (null, null, null);
 
             }
         }
+
+        public static async Task<decimal> GetUserBalance(int userId)
+        {
+            decimal balance = 0M;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.USER_BALANCE_GET",
+                    new SqlParameter("@USER_ID", userId),
+                    new SqlParameter
+                    {
+                        ParameterName = "@BALANCE",
+                        SqlDbType = SqlDbType.Decimal,
+                        Direction = ParameterDirection.Output
+                    }
+                    );
+
+                await sqlCommand.ExecuteNonQueryAsync();
+
+                if (sqlCommand.Parameters["@BALANCE"].Value != DBNull.Value)
+                {
+                    balance = (decimal)sqlCommand.Parameters["@BALANCE"].Value;
+                }
+
+            }
+
+            return balance;
+        }
+
         public static async Task<List<MarketItem>> GetMarketItems(
             int pageNo, int pageCount, int userId, byte? itemCategory = null, int? highestBidder = null,
             bool filterByOwnerId = false, bool orderByPriceAsc = false, bool orderByPriceDesc = false,
