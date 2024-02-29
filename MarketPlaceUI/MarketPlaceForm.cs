@@ -92,7 +92,7 @@ namespace MarketPlaceUI
             flowLayoutPanelHeaderControls.Controls.AddRange(BrowseItemFactory.BuildHeaderControls(panelContent));
 
             // TODO - pageNo
-            List<MarketItem> marketItems = await DataAccess.GetMarketItems(1, 20, User.Instance().Id);
+            List<MarketItem> marketItems = await DataAccess.GetMarketItems(AppState.CurrentPage, AppState.ItemsPerPage, User.Instance().Id);
 
             FlowLayoutPanel panelAllItemsContainer = BrowseItemFactory.BuildAllItemsContainer();
 
@@ -174,7 +174,7 @@ namespace MarketPlaceUI
             //columnEditButton.HeaderText = "Edit";
             //columnEditButton.Name = "columnEditButton";
 
-            List<MarketItem> myMarketItems = await DataAccess.GetMarketItems(1, 20, User.Instance().Id, filterByOwnerId: true);
+            List<MarketItem> myMarketItems = await DataAccess.GetMarketItems(AppState.CurrentPage, AppState.ItemsPerPage, User.Instance().Id, filterByOwnerId: true);
 
             foreach (var myItem in myMarketItems)
             {

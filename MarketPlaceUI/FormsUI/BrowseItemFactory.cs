@@ -1,6 +1,7 @@
 ﻿using MarketPlaceLibrary;
 using MarketPlaceLibrary.Models;
 using MarketPlaceUI.Supporting;
+using System.Diagnostics;
 using System.Security.Policy;
 
 namespace MarketPlaceUI.FormsUI
@@ -9,16 +10,16 @@ namespace MarketPlaceUI.FormsUI
     {
         public static TableLayoutPanel BuildItemContainer(MarketItem marketItem)
         {
-            TableLayoutPanel itemContainer = BrowseItemFactory.BuildItemContainer();
+            TableLayoutPanel itemContainer = BuildItemContainer();
 
-            PictureBox itemPictureBox = BrowseItemFactory.buildItemPictureBox(marketItem);
+            PictureBox itemPictureBox = buildItemPictureBox(marketItem);
             Task.Run(() => { itemPictureBox.Image = LoadImageAsync(marketItem.Id).Result; }); // TODO - revise ??
 
-            TextBox itemTextBox = BrowseItemFactory.BuildItemDescriptionBox(marketItem);
+            TextBox itemTextBox = BuildItemDescriptionBox(marketItem);
 
-            TableLayoutPanel itemControlsContainer = BrowseItemFactory.BuildItemControlsContainer();
+            TableLayoutPanel itemControlsContainer = BuildItemControlsContainer();
 
-            FlowLayoutPanel itemButtonsGroupLeft = BrowseItemFactory.BuildItemButtonsContainer();
+            FlowLayoutPanel itemButtonsGroupLeft = BuildItemButtonsContainer();
             Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", ButtonSize.Tiny, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\question.png");
             buttonInfo.Click += (object sender, EventArgs e) => {
                 ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog();
@@ -33,7 +34,7 @@ namespace MarketPlaceUI.FormsUI
 
             itemButtonsGroupLeft.Controls.AddRange([buttonInfo, buttonFav]);
 
-            FlowLayoutPanel itemButtonsGroupRight = BrowseItemFactory.BuildItemButtonsContainer(FlowDirection.RightToLeft);
+            FlowLayoutPanel itemButtonsGroupRight = BuildItemButtonsContainer(FlowDirection.RightToLeft);
             Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\salary.png");
             buttonBuy.Click += async (object sender, EventArgs e) =>
             {
@@ -103,7 +104,7 @@ namespace MarketPlaceUI.FormsUI
 
             return itemContainer;
         }
-        public static Control[] BuildHeaderControls(Panel panelContent)
+        public static Control[] BuildHeaderControls(Panel panelParentNode)
         {
             Label labelByDate = new Label();
             labelByDate.Text = "by date:";
@@ -136,22 +137,118 @@ namespace MarketPlaceUI.FormsUI
             Button buttonOrder = ButtonFactory.BuildButton("buttonOrder", ButtonSize.Small, new Point(5, 5), text: "Order");
             buttonOrder.Click += async (object sender, EventArgs e) =>
             {
-                panelContent.Controls.Clear();
+                panelParentNode.Controls.Clear();
 
                 int? byDate = comboBoxByDate.SelectedIndex == -1 ? null : comboBoxByDate.SelectedIndex;
                 int? byPrice = comboBoxByPrice.SelectedIndex == -1 ? null : comboBoxByPrice.SelectedIndex;
                 bool onlyFav = checkBoxFav.Checked;
                 // TODO - pageNo
-                List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(1, 20, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate, onlyFav: onlyFav);
-                FlowLayoutPanel panelAllItemsContainer = BrowseItemFactory.BuildAllItemsContainer();
+                List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(AppState.CurrentPage, AppState.ItemsPerPage, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate, onlyFav: onlyFav);
+                FlowLayoutPanel panelAllItemsContainer = BuildAllItemsContainer();
                 foreach (var item in marketItemsOrdered)
                 {
                     panelAllItemsContainer.Controls.Add(BuildItemContainer(item));
                 }
-                panelContent.Controls.Add(panelAllItemsContainer);
+                panelParentNode.Controls.Add(panelAllItemsContainer);
             };
 
-            return [buttonOrder, labelByDate, comboBoxByDate, labelByPrice, comboBoxByPrice, checkBoxFav];
+            Button buttonPrev = ButtonFactory.BuildButton("buttonPrev", ButtonSize.Small, new Point(5, 5), text: "Prev");
+            buttonPrev.Click += async (object sender, EventArgs e) =>
+            {
+                if (AppState.CurrentPage == 1)
+                {
+                    return;
+                }
+
+                // TODO - pause before loading images/data ??
+
+                AppState.isLoadNext = true;
+
+                panelParentNode.Controls.Clear();
+
+                int? byDate = comboBoxByDate.SelectedIndex == -1 ? null : comboBoxByDate.SelectedIndex;
+                int? byPrice = comboBoxByPrice.SelectedIndex == -1 ? null : comboBoxByPrice.SelectedIndex;
+                bool onlyFav = checkBoxFav.Checked;
+
+                AppState.CurrentPage = AppState.CurrentPage - 1;
+
+                Debug.WriteLine($"AppState.CurrentPage: {AppState.CurrentPage}");
+
+                List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(AppState.CurrentPage, AppState.ItemsPerPage, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate, onlyFav: onlyFav);
+                FlowLayoutPanel panelAllItemsContainer = BuildAllItemsContainer();
+                foreach (var item in marketItemsOrdered)
+                {
+                    panelAllItemsContainer.Controls.Add(BuildItemContainer(item));
+                }
+                panelParentNode.Controls.Add(panelAllItemsContainer);
+            };
+
+            Button buttonNext = ButtonFactory.BuildButton("buttonNext", ButtonSize.Small, new Point(5, 5), text: "Next");
+            buttonNext.Click += async (object sender, EventArgs e) =>
+            {
+                if (!AppState.isLoadNext)
+                {
+                    return;
+                }
+
+                int? byDate = comboBoxByDate.SelectedIndex == -1 ? null : comboBoxByDate.SelectedIndex;
+                int? byPrice = comboBoxByPrice.SelectedIndex == -1 ? null : comboBoxByPrice.SelectedIndex;
+                bool onlyFav = checkBoxFav.Checked;
+
+                AppState.CurrentPage = AppState.CurrentPage + 1;
+
+                List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(AppState.CurrentPage, AppState.ItemsPerPage, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate, onlyFav: onlyFav);
+
+                if (marketItemsOrdered.Count == 0)
+                {
+                    AppState.isLoadNext = false;
+                    AppState.CurrentPage = AppState.CurrentPage - 1;
+                    return;
+                }
+
+                // TODO - pause before loading images/data ??
+
+                panelParentNode.Controls.Clear();
+
+                FlowLayoutPanel panelAllItemsContainer = BuildAllItemsContainer();
+                foreach (var item in marketItemsOrdered)
+                {
+                    panelAllItemsContainer.Controls.Add(BuildItemContainer(item));
+                }
+                panelParentNode.Controls.Add(panelAllItemsContainer);
+            };
+
+            ComboBox comboBoxItemsPerPage = new ComboBox();
+            comboBoxItemsPerPage.Items.Add("3");
+            comboBoxItemsPerPage.Items.Add("5");
+            comboBoxItemsPerPage.Items.Add("10");
+            comboBoxItemsPerPage.Width = 60;
+            comboBoxItemsPerPage.Margin = new Padding(5, 6, 0, 0);
+            comboBoxItemsPerPage.KeyPress += (object sender, KeyPressEventArgs e) => { e.Handled = true; };
+            comboBoxItemsPerPage.SelectedItem = $"{AppState.ItemsPerPage}";
+            comboBoxItemsPerPage.SelectedIndexChanged += async (object sender, EventArgs e) =>
+            {
+                AppState.ItemsPerPage = int.Parse((string)comboBoxItemsPerPage.SelectedItem);
+                AppState.CurrentPage = 1;
+                AppState.isLoadNext = true;
+
+                panelParentNode.Controls.Clear();
+
+                int? byDate = comboBoxByDate.SelectedIndex == -1 ? null : comboBoxByDate.SelectedIndex;
+                int? byPrice = comboBoxByPrice.SelectedIndex == -1 ? null : comboBoxByPrice.SelectedIndex;
+                bool onlyFav = checkBoxFav.Checked;
+
+                List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(AppState.CurrentPage, AppState.ItemsPerPage, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate, onlyFav: onlyFav);
+
+                FlowLayoutPanel panelAllItemsContainer = BuildAllItemsContainer();
+                foreach (var item in marketItemsOrdered)
+                {
+                    panelAllItemsContainer.Controls.Add(BuildItemContainer(item));
+                }
+                panelParentNode.Controls.Add(panelAllItemsContainer);
+            };
+
+            return [buttonOrder, labelByDate, comboBoxByDate, labelByPrice, comboBoxByPrice, checkBoxFav, buttonPrev, buttonNext, comboBoxItemsPerPage];
         }
         public static FlowLayoutPanel BuildAllItemsContainer()
         {
