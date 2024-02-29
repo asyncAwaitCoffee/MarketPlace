@@ -34,8 +34,9 @@ namespace MarketPlaceUI
                     labelLogin.Text = userLogin;
                     labelBalance.Text = $"{balance}$";
                     labelBalance.Left = labelBalance.Parent.Width / 2 - labelBalance.Width / 2;
-                }                
-            }            
+                    labelLogin.Left = labelBalance.Parent.Width / 2 - labelLogin.Width / 2;
+                }
+            }
         }
 
         private void buttonMenuMain_Click(object sender, EventArgs e)
@@ -70,46 +71,105 @@ namespace MarketPlaceUI
                 return;
             }
             _currentForm = CurrentForm.Browse;
+            // Header controls remove
             flowLayoutPanelHeaderControls.Controls.Clear();
 
+            // Header controls add
+
+            Label labelByDate = new Label();
+            labelByDate.Text = "by date:";
+            labelByDate.AutoSize = true;
+            labelByDate.Margin = new Padding(5, 9, 0, 0);
+
+            ComboBox comboBoxByDate = new ComboBox();
+            comboBoxByDate.Items.Add("asc");
+            comboBoxByDate.Items.Add("desc");
+            comboBoxByDate.Width = 60;
+            comboBoxByDate.Margin = new Padding(5, 6, 0, 0);
+            comboBoxByDate.KeyPress += (object sender, KeyPressEventArgs e) => { e.Handled = true; };
+
+            Label labelByPrice = new Label();
+            labelByPrice.Text = "by price:";
+            labelByPrice.AutoSize = true;
+            labelByPrice.Margin = new Padding(5, 9, 0, 0);
+
+            ComboBox comboBoxByPrice = new ComboBox();
+            comboBoxByPrice.Items.Add("asc");
+            comboBoxByPrice.Items.Add("desc");
+            comboBoxByPrice.Width = 60;
+            comboBoxByPrice.Margin = new Padding(5, 6, 0, 0);
+            comboBoxByPrice.KeyPress += (object sender, KeyPressEventArgs e) => { e.Handled = true; };
+
+            CheckBox checkBoxFav = new CheckBox();
+            checkBoxFav.Text = "Favorite";
+            checkBoxFav.Margin = new Padding(15, 9, 0, 0);
+
+            Button buttonOrder = ButtonFactory.BuildButton("buttonOrder", ButtonSize.Small, new Point(5, 5), text: "Order");
+            buttonOrder.Click += async (object sender, EventArgs e) =>
+            {
+                int? byDate = comboBoxByDate.SelectedIndex == -1 ? null : comboBoxByDate.SelectedIndex;
+                int? byPrice = comboBoxByPrice.SelectedIndex == -1 ? null : comboBoxByPrice.SelectedIndex;
+                bool favs = checkBoxFav.Checked;
+                // TODO - pageNo
+                List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(1, 20, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate);
+
+                FlowLayoutPanel panelContainer = BuildMarketItemsLayout(marketItemsOrdered);
+                panelContent.Controls.Clear();
+
+                panelContent.Controls.Add(panelContainer);
+            };
+
+            flowLayoutPanelHeaderControls.Controls.Add(buttonOrder);
+            flowLayoutPanelHeaderControls.Controls.Add(labelByDate);
+            flowLayoutPanelHeaderControls.Controls.Add(comboBoxByDate);
+            flowLayoutPanelHeaderControls.Controls.Add(labelByPrice);
+            flowLayoutPanelHeaderControls.Controls.Add(comboBoxByPrice);
+            flowLayoutPanelHeaderControls.Controls.Add(checkBoxFav);
+
             panelContent.Controls.Clear();
-
-            FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
-
-            flowLayoutPanel.Location = new Point(0, 0);
-            flowLayoutPanel.Dock = DockStyle.Fill;
-            flowLayoutPanel.Name = "flowLayoutPanel2";
-            flowLayoutPanel.Visible = true;
-            flowLayoutPanel.AutoScroll = true;
-            flowLayoutPanel.AutoSize = true;
-            flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             // TODO - pageNo
             List<MarketItem> marketItems = await DataAccess.GetMarketItems(1, 20, User.Instance().Id);
 
+            FlowLayoutPanel panelContainer = BuildMarketItemsLayout(marketItems);
 
-            foreach (MarketItem marketItem in marketItems)
+            panelContent.Controls.Add(panelContainer);
+
+
+            FlowLayoutPanel BuildMarketItemsLayout(List<MarketItem> marketItemsList)
             {
-                Panel panel = new Panel();                
-                panel.Tag = marketItem.Id; // for navigation
-                panel.Size = new Size(300, 300);
-                //panel.Visible = false;
+                // Market items container
+                FlowLayoutPanel panelContainer = new FlowLayoutPanel();
 
-                PictureBox pictureBox = BrowseItemFactory.BuildBrowseHeaderBox(marketItem);
+                panelContainer.Location = new Point(0, 0);
+                panelContainer.Dock = DockStyle.Fill;
+                panelContainer.Visible = true;
+                panelContainer.AutoScroll = true;
+                panelContainer.AutoSize = true;
+                panelContainer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
-                // TODO - simplify?
-                Task.Run(() => { pictureBox.Image = LoadImageAsync(marketItem.Id).Result; });
+                foreach (MarketItem marketItem in marketItemsList)
+                {
+                    Panel panelBody = new Panel();
+                    panelBody.Tag = marketItem.Id; // for navigation
+                    panelBody.Size = new Size(300, 300);
+                    //panel.Visible = false;
 
-                TableLayoutPanel panelInner = BrowseItemFactory.BuildBrowseFooterBox(marketItem);
+                    PictureBox pictureBox = BrowseItemFactory.BuildBrowseHeaderBox(marketItem);
 
-                panel.Controls.Add(pictureBox);
-                panel.Controls.Add(panelInner);
+                    // TODO - simplify?
+                    Task.Run(() => { pictureBox.Image = LoadImageAsync(marketItem.Id).Result; });
 
-                flowLayoutPanel.Controls.Add(panel);
+                    TableLayoutPanel panelInner = BrowseItemFactory.BuildBrowseFooterBox(marketItem);
+
+                    panelBody.Controls.Add(pictureBox);
+                    panelBody.Controls.Add(panelInner);
+
+                    panelContainer.Controls.Add(panelBody);
+                }
+
+                return panelContainer;
             }
-
-            panelContent.Controls.Add(flowLayoutPanel);
-
         }
 
         private async void buttonMyItems_Click(object sender, EventArgs e)

@@ -133,6 +133,7 @@ namespace MarketPlaceUI
                 _labelLogin.Text = textBoxAuthUserLogin.Text;
                 _labelBalance.Text = $"{balance}$";
                 _labelBalance.Left = _labelBalance.Parent.Width / 2 - _labelBalance.Width / 2;
+                _labelLogin.Left = _labelLogin.Parent.Width / 2 - _labelLogin.Width / 2;
 
                 if (checkBoxStayLoggedIn.Checked)
                 {
