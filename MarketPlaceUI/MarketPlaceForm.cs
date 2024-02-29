@@ -3,19 +3,19 @@ using MarketPlaceLibrary.Models;
 using MarketPlaceUI.FormsUI;
 using MarketPlaceUI.Supporting;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace MarketPlaceUI
 {
     public partial class MarketPlaceForm : Form
     {
-        private CurrentForm _currentForm = CurrentForm.Main;
+        private CurrentForm _currentForm;
         public MarketPlaceForm()
         {
             InitializeComponent();
             TryLoggedInAsSaved();
 
-
-
+            this.Load += (object sender, EventArgs e) => buttonMenuMain.PerformClick();
         }
 
         private async void TryLoggedInAsSaved()
@@ -42,6 +42,7 @@ namespace MarketPlaceUI
 
         private void buttonMenuMain_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine(_currentForm.ToString());
             if (_currentForm == CurrentForm.Main)
             {
                 return;
@@ -51,11 +52,17 @@ namespace MarketPlaceUI
 
             panelContent.Controls.Clear();
 
-            RichTextBox richTextBox = new RichTextBox();
-            richTextBox.Dock = DockStyle.Fill;
-            richTextBox.Text = "ABC";
+            PictureBox pictureBox = new PictureBox();
+            pictureBox.Dock = DockStyle.Fill;
+            pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
 
-            panelContent.Controls.Add(richTextBox);
+            Image image = Image.FromFile(@"D:\Programming\projects\MarketPlace\Assets\auction.png");
+
+            pictureBox.Image = new Bitmap(image, new Size(200, 200));
+
+            image.Dispose();
+
+            panelContent.Controls.Add(pictureBox);
 
         }
 
@@ -114,10 +121,10 @@ namespace MarketPlaceUI
                 // TODO - pageNo
                 List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(1, 20, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate, onlyFav: onlyFav);
 
-                FlowLayoutPanel panelContainer = BuildMarketItemsLayout(marketItemsOrdered);
+// TODO - uncomment                //FlowLayoutPanel panelContainer = BuildMarketItemsLayout(marketItemsOrdered);
                 panelContent.Controls.Clear();
 
-                panelContent.Controls.Add(panelContainer);
+                // TODO - uncomment                panelContent.Controls.Add(panelContainer);
             };
 
             flowLayoutPanelHeaderControls.Controls.Add(buttonOrder);
@@ -127,49 +134,128 @@ namespace MarketPlaceUI
             flowLayoutPanelHeaderControls.Controls.Add(comboBoxByPrice);
             flowLayoutPanelHeaderControls.Controls.Add(checkBoxFav);
 
+            foreach (Control control in panelContent.Controls)
+            {
+                control.Dispose();
+            }
             panelContent.Controls.Clear();
+
 
             // TODO - pageNo
             List<MarketItem> marketItems = await DataAccess.GetMarketItems(1, 20, User.Instance().Id);
 
-            FlowLayoutPanel panelContainer = BuildMarketItemsLayout(marketItems);
+            FlowLayoutPanel panelAllItemsContainer = new FlowLayoutPanel();
 
-            panelContent.Controls.Add(panelContainer);
+            panelAllItemsContainer.Location = new Point(0, 0);
+            panelAllItemsContainer.Dock = DockStyle.Fill;
+            panelAllItemsContainer.Visible = true;
+            panelAllItemsContainer.AutoScroll = true;
+            panelAllItemsContainer.AutoSize = true;
+            panelAllItemsContainer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
-
-            FlowLayoutPanel BuildMarketItemsLayout(List<MarketItem> marketItemsList)
+            foreach (var item in marketItems)
             {
-                // Market items container
-                FlowLayoutPanel panelContainer = new FlowLayoutPanel();
+                panelAllItemsContainer.Controls.Add(BuildItemContainer(item));
+            }
 
-                panelContainer.Location = new Point(0, 0);
-                panelContainer.Dock = DockStyle.Fill;
-                panelContainer.Visible = true;
-                panelContainer.AutoScroll = true;
-                panelContainer.AutoSize = true;
-                panelContainer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panelContent.Controls.Add(panelAllItemsContainer);
 
-                foreach (MarketItem marketItem in marketItemsList)
+
+            TableLayoutPanel BuildItemContainer(MarketItem marketItem)
+            {
+                TableLayoutPanel itemContainer = BrowseItemFactory.BuildItemContainer();
+
+                PictureBox itemPictureBox = BrowseItemFactory.buildItemPictureBox(marketItem);                
+                Task.Run(() => { itemPictureBox.Image = LoadImageAsync(marketItem.Id).Result; }); // TODO - revise ??
+
+                TextBox itemTextBox = BrowseItemFactory.BuildItemDescriptionBox(marketItem);
+
+                TableLayoutPanel itemControlsContainer = BrowseItemFactory.BuildItemControlsContainer();
+
+                FlowLayoutPanel itemButtonsGroupLeft = BrowseItemFactory.BuildItemButtonsContainer();
+                Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", ButtonSize.Tiny, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\question.png");
+                buttonInfo.Click += (object sender, EventArgs e) => {
+                    ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog();
+                };
+
+                string star = marketItem.IsFav ? "star.png" : "star_no.png";
+                Button buttonFav = ButtonFactory.BuildButton("buttonFav", ButtonSize.Tiny, new Point(0, 0), imagePath: @$"D:\Programming\projects\MarketPlace\Assets\{star}");
+                buttonFav.Click += async (object sender, EventArgs e) =>
                 {
-                    Panel panelBody = new Panel();
-                    panelBody.Tag = marketItem.Id; // for navigation
-                    panelBody.Size = new Size(300, 300);
-                    //panel.Visible = false;
+                    await DataAccess.ToggleItemFavorite(User.Instance().Id, marketItem.Id);
+                };
 
-                    PictureBox pictureBox = BrowseItemFactory.BuildBrowseHeaderBox(marketItem);
+                itemButtonsGroupLeft.Controls.AddRange([buttonInfo, buttonFav]);
 
-                    // TODO - simplify?
-                    Task.Run(() => { pictureBox.Image = LoadImageAsync(marketItem.Id).Result; });
+                FlowLayoutPanel itemButtonsGroupRight = BrowseItemFactory.BuildItemButtonsContainer(FlowDirection.RightToLeft);
+                Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\salary.png");
+                buttonBuy.Click += async (object sender, EventArgs e) =>
+                {
+                    var result = MessageBox.Show($"Confirm your purchase of {marketItem.Title} for {marketItem.PriceStart}$.",
+                        "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
-                    TableLayoutPanel panelInner = BrowseItemFactory.BuildBrowseFooterBox(marketItem);
+                    if (result == DialogResult.OK)
+                    {
+                        int orderId = await DataAccess.AddItemToOrder(User.Instance().Id, marketItem.Id);
 
-                    panelBody.Controls.Add(pictureBox);
-                    panelBody.Controls.Add(panelInner);
+                        FormMethods.RemoveControlByGrandChild(itemContainer);
 
-                    panelContainer.Controls.Add(panelBody);
+                        await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
+                        await DataAccess.SaveHistory(marketItem.OwnerId, User.Instance().Id, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
+
+                        MessageBox.Show($"Order #{orderId} registered.");
+                    }
+                };
+
+                itemButtonsGroupRight.Controls.Add(buttonBuy);
+
+
+                if (marketItem.BidStep != 0)
+                {
+                    Button buttonBid = ButtonFactory.BuildButton("buttonBid", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\profits.png");
+
+                    buttonBid.Click += async (object sender, EventArgs e) =>
+                    {
+                        var result = MessageBox.Show($"Confirm your bid of {Math.Round(marketItem.PriceCurrent + marketItem.BidStep, 2)}$ for {marketItem.Title}$.",
+                        "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+                        if (result == DialogResult.OK)
+                        {
+                            int bidResult = await DataAccess.BidItem(User.Instance().Id, marketItem.Id);
+
+                            switch (bidResult)
+                            {
+                                case 0:
+                                    // todo string possibleReason = "";
+                                    MessageBox.Show($"Unable to bid.");
+                                    break;
+                                case 1:
+                                    MessageBox.Show("Bid is successful.");
+                                    FormMethods.RemoveControlByGrandChild(itemContainer);
+                                    break;
+                                case 2:
+                                    MessageBox.Show($"Congratulations! You baught {marketItem.Title}");
+                                    break;
+                                default:
+                                    MessageBox.Show($"Unhandled code: {bidResult}.");
+                                    break;
+                            }
+
+                            await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Bid, marketItem.PriceEnd);
+                        }
+                    };
+
+                    itemButtonsGroupRight.Controls.Add(buttonBid);
                 }
 
-                return panelContainer;
+                itemControlsContainer.Controls.Add(itemButtonsGroupLeft, 0, 0);
+                itemControlsContainer.Controls.Add(itemButtonsGroupRight, 1, 0);
+
+                itemContainer.Controls.Add(itemPictureBox);
+                itemContainer.Controls.Add(itemTextBox);
+                itemContainer.Controls.Add(itemControlsContainer);
+
+                return itemContainer;
             }
         }
 
@@ -384,7 +470,8 @@ namespace MarketPlaceUI
 
             if (imageData == null)
             {
-                tcs.SetResult(Image.FromFile(@"D:\Programming\projects\MarketPlace\Assets\NO_IMAGE.png"));
+                Image image = Image.FromFile(@"D:\Programming\projects\MarketPlace\Assets\NO_IMAGE.png");
+                tcs.SetResult(image);
             }
 
             else

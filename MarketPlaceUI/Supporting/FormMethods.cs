@@ -10,15 +10,10 @@ namespace MarketPlaceUI.Supporting
     {
         public static void RemoveControlByGrandChild(Control control)
         {
-
             Control? parent = control.Parent;
             if (parent != null)
             {
-                Control? parentControl = parent.Parent;
-                if (parentControl != null)
-                {
-                    parentControl.Controls.Remove(parent);
-                }
+                parent.Controls.Remove(control);
             }
         }
     }
