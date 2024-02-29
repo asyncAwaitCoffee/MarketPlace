@@ -6,164 +6,83 @@ namespace MarketPlaceUI.FormsUI
 {
     internal static class BrowseItemFactory
     {
-        public static PictureBox BuildBrowseHeaderBox(MarketItem marketItem)
+        public static TableLayoutPanel BuildItemContainer()
         {
-            PictureBox pictureBox = new PictureBox();
-            pictureBox.BackColor = Color.White;
-            pictureBox.Size = new Size(300, 200);
-            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            TableLayoutPanel itemContainer = new TableLayoutPanel();
+            itemContainer.Size = new Size(300, 300);
+            itemContainer.ColumnCount = 1;
+            itemContainer.RowCount = 3;
+            itemContainer.BackColor = Color.Green;
+            itemContainer.Margin = new Padding(3);
+            itemContainer.Padding = new Padding(0);
+
+            return itemContainer;
+        }
+
+        public static PictureBox buildItemPictureBox(MarketItem marketItem)
+        {
+            PictureBox itemPictureBox = new PictureBox();
+            itemPictureBox.Size = new Size(300, 200);
+            itemPictureBox.BackColor = Color.White;
+            itemPictureBox.Margin = new Padding(0);
+            itemPictureBox.Padding = new Padding(0);
+            itemPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
 
             Label labelTitle = new Label();
             labelTitle.BackColor = Color.White;
             labelTitle.Text = marketItem.Title;
             labelTitle.Top = 0;
             labelTitle.Left = 0;
-            labelTitle.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 
             Label labelPrice = new Label();
             labelPrice.BackColor = Color.White;
             labelPrice.Text = $"{marketItem.PriceStart}$";
-            labelPrice.Top = pictureBox.Height - labelTitle.Height;
-            labelPrice.Left = pictureBox.Width - labelTitle.Width;
-            labelPrice.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            labelPrice.Top = itemPictureBox.Height - labelTitle.Height;
+            labelPrice.Left = itemPictureBox.Width - labelTitle.Width;
 
-            pictureBox.Controls.Add(labelTitle);
-            pictureBox.Controls.Add(labelPrice);
+            itemPictureBox.Controls.Add(labelTitle);
+            itemPictureBox.Controls.Add(labelPrice);
 
-            return pictureBox;
+            return itemPictureBox;
         }
 
-        public static TableLayoutPanel BuildBrowseFooterBox(MarketItem marketItem)
+        public static TextBox BuildItemDescriptionBox(MarketItem marketItem)
         {
-            TableLayoutPanel panelInner = new TableLayoutPanel();
-            panelInner.Size = new Size(300, 100);
-            panelInner.Dock = DockStyle.Bottom;
-            panelInner.ColumnCount = 1;
-            panelInner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            panelInner.RowCount = 2;
-            panelInner.RowStyles.Add(new RowStyle(SizeType.Absolute, 60));
-            panelInner.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
-            panelInner.Padding = new Padding(0);
-            panelInner.Margin = new Padding(0);
-            panelInner.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
+            TextBox itemTextBox = new TextBox();
+            itemTextBox.Multiline = true;
+            itemTextBox.Size = new Size(300, 60);
+            itemTextBox.BorderStyle = BorderStyle.None;
+            itemTextBox.Margin = new Padding(0);
+            itemTextBox.Padding = new Padding(0);
+            itemTextBox.Enabled = false;
+            itemTextBox.Text = marketItem.Description;
 
-            TextBox textBox = new TextBox();
-            textBox.Multiline = true;
-            textBox.Location = new Point(0, 0);
-            //textBox.ScrollBars = ScrollBars.Vertical;
-            textBox.BackColor = Color.WhiteSmoke;
-            textBox.BorderStyle = BorderStyle.None;
-            textBox.Dock = DockStyle.Fill;
-            //textBox.Size = new Size(300, 200);
-            textBox.Margin = new Padding(0);
-            textBox.Text = marketItem.Description;
-            //textBox.ReadOnly = true;
-            textBox.Enabled = false;
+            return itemTextBox;
+        }
 
-            Panel controlWrapperPanel = new Panel();
-            controlWrapperPanel.Dock = DockStyle.Fill;
-            controlWrapperPanel.Padding = new Padding(0);
-            controlWrapperPanel.Margin = new Padding(0);
-            controlWrapperPanel.BackColor = UISettings.Colors[0];
+        public static TableLayoutPanel BuildItemControlsContainer()
+        {
+            TableLayoutPanel itemButtonsContainer = new TableLayoutPanel();
+            itemButtonsContainer.ColumnCount = 2;
+            itemButtonsContainer.RowCount = 1;
+            itemButtonsContainer.Size = new Size(300, 40);
+            itemButtonsContainer.Margin = new Padding(0);
+            itemButtonsContainer.Padding = new Padding(0);
 
-            FlowLayoutPanel panelControlsLeft = new FlowLayoutPanel();
-            //panelControlsLeft.Dock = DockStyle.Left;
-            panelControlsLeft.Size = new Size(150, 40);
-            panelControlsLeft.Padding = new Padding(0);
-            panelControlsLeft.Margin = new Padding(0);
-            panelControlsLeft.FlowDirection = FlowDirection.LeftToRight;
+            return itemButtonsContainer;
+        }
 
-            Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", ButtonSize.Tiny, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\question.png");
+        public static FlowLayoutPanel BuildItemButtonsContainer(FlowDirection flowDirection = FlowDirection.LeftToRight)
+        {
+            FlowLayoutPanel ItemButtonsContainer = new FlowLayoutPanel();
+            ItemButtonsContainer.Dock = DockStyle.Fill;
+            ItemButtonsContainer.BackColor = UISettings.Colors[0];
+            ItemButtonsContainer.Size = new Size(150, 50);
+            ItemButtonsContainer.Margin = new Padding(0);
+            ItemButtonsContainer.Padding = new Padding(0);
+            ItemButtonsContainer.FlowDirection = flowDirection;
 
-            string star = marketItem.IsFav ? "star.png" : "star_no.png";
-            Button buttonFav = ButtonFactory.BuildButton("buttonFav", ButtonSize.Tiny, new Point(0, 0), imagePath: @$"D:\Programming\projects\MarketPlace\Assets\{star}");
-
-
-            buttonFav.Click += async (object sender, EventArgs e) =>
-            {
-                 await DataAccess.ToggleItemFavorite(User.Instance().Id, marketItem.Id);
-            };
-
-            buttonInfo.Click += (object sender, EventArgs e) => { ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog(); };
-
-            panelControlsLeft.Controls.AddRange([buttonInfo, buttonFav]);
-
-            FlowLayoutPanel panelControlsRight = new FlowLayoutPanel();
-            //panelControlsRight.Dock = DockStyle.Right;
-            panelControlsRight.Size = new Size(150, 40);
-            panelControlsRight.Padding = new Padding(0);
-            panelControlsRight.Left = 150;
-            panelControlsRight.FlowDirection = FlowDirection.RightToLeft;
-
-            
-            Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\salary.png");
-
-            buttonBuy.Click += async (object sender, EventArgs e) =>
-            {
-                var result = MessageBox.Show($"Confirm your purchase of {marketItem.Title} for {marketItem.PriceStart}$.",
-                    "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-
-                if (result == DialogResult.OK)
-                {
-                    int orderId = await DataAccess.AddItemToOrder(User.Instance().Id, marketItem.Id);
-
-                    FormMethods.RemoveControlByGrandChild(panelInner);
-
-                    await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
-                    await DataAccess.SaveHistory(marketItem.OwnerId, User.Instance().Id, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
-
-                    MessageBox.Show($"Order #{orderId} registered.");
-                }
-            };
-
-            panelControlsRight.Controls.Add(buttonBuy);
-
-
-            if (marketItem.BidStep != 0)
-            {
-                Button buttonBid = ButtonFactory.BuildButton("buttonBid", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\profits.png");
-
-                buttonBid.Click += async (object sender, EventArgs e) =>
-                {
-                    var result = MessageBox.Show($"Confirm your bid of {Math.Round(marketItem.PriceCurrent + marketItem.BidStep, 2)}$ for {marketItem.Title}$.",
-                    "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-
-                    if (result == DialogResult.OK)
-                    {
-                        int bidResult = await DataAccess.BidItem(User.Instance().Id, marketItem.Id);
-
-                        switch(bidResult)
-                        {
-                            case 0:
-                                // todo string possibleReason = "";
-                                MessageBox.Show($"Unable to bid.");
-                                break;
-                            case 1:
-                                MessageBox.Show("Bid is successful.");
-                                FormMethods.RemoveControlByGrandChild(panelInner);
-                                break;
-                            case 2:
-                                MessageBox.Show($"Congratulations! You baught {marketItem.Title}");
-                                break;
-                            default:
-                                MessageBox.Show($"Unhandled code: {bidResult}.");
-                                break;
-                        }
-
-                        await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Bid, marketItem.PriceEnd);
-                    }
-                };
-
-                panelControlsRight.Controls.Add(buttonBid);
-            }
-
-            controlWrapperPanel.Controls.Add(panelControlsLeft);
-            controlWrapperPanel.Controls.Add(panelControlsRight);
-
-            panelInner.Controls.Add(textBox);
-            panelInner.Controls.Add(controlWrapperPanel);
-
-            return panelInner;
+            return ItemButtonsContainer;
         }
     }
 }

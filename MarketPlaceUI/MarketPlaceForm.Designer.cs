@@ -37,20 +37,24 @@
             buttonMyItems = new Button();
             buttonBrowse = new Button();
             buttonMenuMain = new Button();
-            panel1 = new Panel();
+            panelAccountInfo = new Panel();
             labelBalance = new Label();
             labelLogin = new Label();
             panelHeader = new Panel();
-            panel2 = new Panel();
+            panelHeaderStyle7 = new Panel();
+            panelHeaderStyle6 = new Panel();
+            panelHeaderStyle5 = new Panel();
+            panelHeaderStyle4 = new Panel();
+            panelHeaderStyle2 = new Panel();
             flowLayoutPanelHeaderControls = new FlowLayoutPanel();
             buttonMails = new Button();
             imageList = new ImageList(components);
             panelContent = new Panel();
-            panel3 = new Panel();
+            panelLeftMenuDock = new Panel();
             panelMenuLeft.SuspendLayout();
-            panel1.SuspendLayout();
+            panelAccountInfo.SuspendLayout();
             panelHeader.SuspendLayout();
-            panel3.SuspendLayout();
+            panelLeftMenuDock.SuspendLayout();
             SuspendLayout();
             // 
             // panelMenuLeft
@@ -62,7 +66,7 @@
             panelMenuLeft.Controls.Add(buttonMyItems);
             panelMenuLeft.Controls.Add(buttonBrowse);
             panelMenuLeft.Controls.Add(buttonMenuMain);
-            panelMenuLeft.Controls.Add(panel1);
+            panelMenuLeft.Controls.Add(panelAccountInfo);
             panelMenuLeft.Location = new Point(5, 5);
             panelMenuLeft.Margin = new Padding(0);
             panelMenuLeft.Name = "panelMenuLeft";
@@ -173,18 +177,18 @@
             buttonMenuMain.UseVisualStyleBackColor = false;
             buttonMenuMain.Click += buttonMenuMain_Click;
             // 
-            // panel1
+            // panelAccountInfo
             // 
-            panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel1.BackColor = Color.CornflowerBlue;
-            panel1.Controls.Add(labelBalance);
-            panel1.Controls.Add(labelLogin);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 0);
-            panel1.Margin = new Padding(0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(210, 100);
-            panel1.TabIndex = 2;
+            panelAccountInfo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panelAccountInfo.BackColor = Color.CornflowerBlue;
+            panelAccountInfo.Controls.Add(labelBalance);
+            panelAccountInfo.Controls.Add(labelLogin);
+            panelAccountInfo.Dock = DockStyle.Top;
+            panelAccountInfo.Location = new Point(0, 0);
+            panelAccountInfo.Margin = new Padding(0);
+            panelAccountInfo.Name = "panelAccountInfo";
+            panelAccountInfo.Size = new Size(210, 100);
+            panelAccountInfo.TabIndex = 2;
             // 
             // labelBalance
             // 
@@ -211,7 +215,11 @@
             // panelHeader
             // 
             panelHeader.BackColor = SystemColors.ActiveCaption;
-            panelHeader.Controls.Add(panel2);
+            panelHeader.Controls.Add(panelHeaderStyle7);
+            panelHeader.Controls.Add(panelHeaderStyle6);
+            panelHeader.Controls.Add(panelHeaderStyle5);
+            panelHeader.Controls.Add(panelHeaderStyle4);
+            panelHeader.Controls.Add(panelHeaderStyle2);
             panelHeader.Controls.Add(flowLayoutPanelHeaderControls);
             panelHeader.Controls.Add(buttonMails);
             panelHeader.Location = new Point(219, 0);
@@ -221,20 +229,52 @@
             panelHeader.Size = new Size(938, 51);
             panelHeader.TabIndex = 1;
             // 
-            // panel2
+            // panelHeaderStyle7
             // 
-            panel2.BackColor = Color.SkyBlue;
-            panel2.Location = new Point(862, 6);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(70, 39);
-            panel2.TabIndex = 3;
+            panelHeaderStyle7.BackColor = Color.SkyBlue;
+            panelHeaderStyle7.Location = new Point(6, 6);
+            panelHeaderStyle7.Name = "panelHeaderStyle7";
+            panelHeaderStyle7.Size = new Size(12, 39);
+            panelHeaderStyle7.TabIndex = 4;
+            // 
+            // panelHeaderStyle6
+            // 
+            panelHeaderStyle6.BackColor = Color.SkyBlue;
+            panelHeaderStyle6.Location = new Point(21, 6);
+            panelHeaderStyle6.Name = "panelHeaderStyle6";
+            panelHeaderStyle6.Size = new Size(17, 39);
+            panelHeaderStyle6.TabIndex = 4;
+            // 
+            // panelHeaderStyle5
+            // 
+            panelHeaderStyle5.BackColor = Color.SkyBlue;
+            panelHeaderStyle5.Location = new Point(41, 6);
+            panelHeaderStyle5.Name = "panelHeaderStyle5";
+            panelHeaderStyle5.Size = new Size(34, 39);
+            panelHeaderStyle5.TabIndex = 4;
+            // 
+            // panelHeaderStyle4
+            // 
+            panelHeaderStyle4.BackColor = Color.SkyBlue;
+            panelHeaderStyle4.Location = new Point(78, 6);
+            panelHeaderStyle4.Name = "panelHeaderStyle4";
+            panelHeaderStyle4.Size = new Size(70, 39);
+            panelHeaderStyle4.TabIndex = 4;
+            // 
+            // panelHeaderStyle2
+            // 
+            panelHeaderStyle2.BackColor = Color.SkyBlue;
+            panelHeaderStyle2.Location = new Point(862, 6);
+            panelHeaderStyle2.Name = "panelHeaderStyle2";
+            panelHeaderStyle2.Size = new Size(70, 39);
+            panelHeaderStyle2.TabIndex = 3;
             // 
             // flowLayoutPanelHeaderControls
             // 
             flowLayoutPanelHeaderControls.BackColor = Color.SkyBlue;
-            flowLayoutPanelHeaderControls.Location = new Point(5, 5);
+            flowLayoutPanelHeaderControls.Location = new Point(151, 5);
             flowLayoutPanelHeaderControls.Name = "flowLayoutPanelHeaderControls";
-            flowLayoutPanelHeaderControls.Size = new Size(811, 40);
+            flowLayoutPanelHeaderControls.Size = new Size(665, 40);
             flowLayoutPanelHeaderControls.TabIndex = 2;
             // 
             // buttonMails
@@ -268,16 +308,16 @@
             panelContent.Size = new Size(939, 519);
             panelContent.TabIndex = 3;
             // 
-            // panel3
+            // panelLeftMenuDock
             // 
-            panel3.BackColor = SystemColors.ActiveCaption;
-            panel3.Controls.Add(panelMenuLeft);
-            panel3.Dock = DockStyle.Left;
-            panel3.Location = new Point(0, 0);
-            panel3.Margin = new Padding(0);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(219, 559);
-            panel3.TabIndex = 0;
+            panelLeftMenuDock.BackColor = SystemColors.ActiveCaption;
+            panelLeftMenuDock.Controls.Add(panelMenuLeft);
+            panelLeftMenuDock.Dock = DockStyle.Left;
+            panelLeftMenuDock.Location = new Point(0, 0);
+            panelLeftMenuDock.Margin = new Padding(0);
+            panelLeftMenuDock.Name = "panelLeftMenuDock";
+            panelLeftMenuDock.Size = new Size(219, 559);
+            panelLeftMenuDock.TabIndex = 0;
             // 
             // MarketPlaceForm
             // 
@@ -285,7 +325,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(1156, 559);
-            Controls.Add(panel3);
+            Controls.Add(panelLeftMenuDock);
             Controls.Add(panelContent);
             Controls.Add(panelHeader);
             Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
@@ -293,12 +333,12 @@
             Margin = new Padding(4);
             Name = "MarketPlaceForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "Market Place";
             panelMenuLeft.ResumeLayout(false);
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
+            panelAccountInfo.ResumeLayout(false);
+            panelAccountInfo.PerformLayout();
             panelHeader.ResumeLayout(false);
-            panel3.ResumeLayout(false);
+            panelLeftMenuDock.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -306,7 +346,7 @@
 
         private Panel panelMenuLeft;
         private Panel panelHeader;
-        private Panel panel1;
+        private Panel panelAccountInfo;
         private Button buttonMenuMain;
         private Button buttonHistory;
         private Button buttonMyItems;
@@ -319,7 +359,11 @@
         private ImageList imageList;
         private Label labelLogin;
         private Label labelBalance;
-        private Panel panel2;
-        private Panel panel3;
+        private Panel panelHeaderStyle2;
+        private Panel panelLeftMenuDock;
+        private Panel panelHeaderStyle7;
+        private Panel panelHeaderStyle6;
+        private Panel panelHeaderStyle5;
+        private Panel panelHeaderStyle4;
     }
 }

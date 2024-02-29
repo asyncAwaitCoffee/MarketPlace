@@ -8,6 +8,7 @@ namespace MarketPlaceUI.Supporting
 {
     public enum CurrentForm
     {
+        None,
         Main,
         Browse,
         MyItems,
