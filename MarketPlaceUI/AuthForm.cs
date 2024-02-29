@@ -8,10 +8,12 @@ namespace MarketPlaceUI
     public partial class AuthForm : Form
     {
         private Label _labelLogin;
-        public AuthForm(Label labelLogin)
+        private Label _labelBalance;
+        public AuthForm(Label labelLogin, Label labelBalance)
         {
             InitializeComponent();
             _labelLogin = labelLogin;
+            _labelBalance = labelBalance;
         }
 
         private async void buttonRegOk_Click(object sender, EventArgs e)
@@ -99,10 +101,11 @@ namespace MarketPlaceUI
             }
 
             int? userId = null, userLevel = null;
+            decimal? balance = null;
 
             try
             {
-                (userId, userLevel) = await DataAccess.TryUserLogin(textBoxAuthUserLogin.Text, textBoxAuthUserPassword.Text);
+                (userId, userLevel, balance) = await DataAccess.TryUserLogin(textBoxAuthUserLogin.Text, textBoxAuthUserPassword.Text);
             }
             catch (DbException ex)
             {
@@ -125,8 +128,11 @@ namespace MarketPlaceUI
             {
                 User.LogOut();
 
-                User.Init((int)userId, textBoxAuthUserLogin.Text, (int)userLevel!);
+                User.Init((int)userId, textBoxAuthUserLogin.Text, (int)userLevel!, (decimal)balance!);
+                // TODO - method for labels
                 _labelLogin.Text = textBoxAuthUserLogin.Text;
+                _labelBalance.Text = $"{balance}$";
+                _labelBalance.Left = _labelBalance.Parent.Width / 2 - _labelBalance.Width / 2;
 
                 if (checkBoxStayLoggedIn.Checked)
                 {

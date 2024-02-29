@@ -31,6 +31,7 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MarketPlaceForm));
             panelMenuLeft = new Panel();
+            labelBalance = new Label();
             buttonAccount = new Button();
             buttonAuth = new Button();
             buttonHistory = new Button();
@@ -38,6 +39,7 @@
             buttonBrowse = new Button();
             buttonMenuMain = new Button();
             panel1 = new Panel();
+            labelLogin = new Label();
             panelHeader = new Panel();
             flowLayoutPanelHeaderControls = new FlowLayoutPanel();
             buttonMails = new Button();
@@ -46,7 +48,6 @@
             textBox1 = new TextBox();
             button1 = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            labelLogin = new Label();
             panelMenuLeft.SuspendLayout();
             panelHeader.SuspendLayout();
             panelContent.SuspendLayout();
@@ -55,6 +56,7 @@
             // panelMenuLeft
             // 
             panelMenuLeft.BackColor = Color.Azure;
+            panelMenuLeft.Controls.Add(labelBalance);
             panelMenuLeft.Controls.Add(buttonAccount);
             panelMenuLeft.Controls.Add(buttonAuth);
             panelMenuLeft.Controls.Add(buttonHistory);
@@ -68,6 +70,16 @@
             panelMenuLeft.Name = "panelMenuLeft";
             panelMenuLeft.Size = new Size(220, 561);
             panelMenuLeft.TabIndex = 0;
+            // 
+            // labelBalance
+            // 
+            labelBalance.AutoSize = true;
+            labelBalance.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelBalance.Location = new Point(75, 317);
+            labelBalance.Name = "labelBalance";
+            labelBalance.Size = new Size(54, 45);
+            labelBalance.TabIndex = 9;
+            labelBalance.Text = "0$";
             // 
             // buttonAccount
             // 
@@ -178,11 +190,22 @@
             panel1.Size = new Size(220, 41);
             panel1.TabIndex = 2;
             // 
+            // labelLogin
+            // 
+            labelLogin.AutoSize = true;
+            labelLogin.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelLogin.ForeColor = Color.Black;
+            labelLogin.Location = new Point(802, 5);
+            labelLogin.Name = "labelLogin";
+            labelLogin.Size = new Size(84, 37);
+            labelLogin.TabIndex = 3;
+            labelLogin.Text = "Login";
+            // 
             // panelHeader
             // 
             panelHeader.BackColor = SystemColors.ActiveCaption;
-            panelHeader.Controls.Add(labelLogin);
             panelHeader.Controls.Add(flowLayoutPanelHeaderControls);
+            panelHeader.Controls.Add(labelLogin);
             panelHeader.Controls.Add(buttonMails);
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(220, 0);
@@ -260,17 +283,6 @@
             flowLayoutPanel1.Size = new Size(222, 127);
             flowLayoutPanel1.TabIndex = 0;
             // 
-            // labelLogin
-            // 
-            labelLogin.AutoSize = true;
-            labelLogin.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            labelLogin.ForeColor = Color.White;
-            labelLogin.Location = new Point(830, 11);
-            labelLogin.Name = "labelLogin";
-            labelLogin.Size = new Size(64, 30);
-            labelLogin.TabIndex = 3;
-            labelLogin.Text = "Login";
-            // 
             // MarketPlaceForm
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
@@ -286,6 +298,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             panelMenuLeft.ResumeLayout(false);
+            panelMenuLeft.PerformLayout();
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             panelContent.ResumeLayout(false);
@@ -312,5 +325,6 @@
         private Button buttonAccount;
         private ImageList imageList;
         private Label labelLogin;
+        private Label labelBalance;
     }
 }

@@ -99,7 +99,9 @@ namespace MarketPlaceUI.FormsUI
                 if (result == DialogResult.OK)
                 {
                     int orderId = await DataAccess.AddItemToOrder(User.Instance().Id, marketItem.Id);
-                    
+
+                    FormMethods.RemoveControlByGrandChild(panelInner);
+
                     await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
                     await DataAccess.SaveHistory(marketItem.OwnerId, User.Instance().Id, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
 
@@ -123,9 +125,25 @@ namespace MarketPlaceUI.FormsUI
                     {
                         int bidResult = await DataAccess.BidItem(User.Instance().Id, marketItem.Id);
 
-                        await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Bid, marketItem.PriceEnd);
+                        switch(bidResult)
+                        {
+                            case 0:
+                                // todo string possibleReason = "";
+                                MessageBox.Show($"Unable to bid.");
+                                break;
+                            case 1:
+                                MessageBox.Show("Bid is successful.");
+                                FormMethods.RemoveControlByGrandChild(panelInner);
+                                break;
+                            case 2:
+                                MessageBox.Show($"Congratulations! You baught {marketItem.Title}");
+                                break;
+                            default:
+                                MessageBox.Show($"Unhandled code: {bidResult}.");
+                                break;
+                        }
 
-                        MessageBox.Show($"bidResult: {bidResult}.");
+                        await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Bid, marketItem.PriceEnd);
                     }
                 };
 

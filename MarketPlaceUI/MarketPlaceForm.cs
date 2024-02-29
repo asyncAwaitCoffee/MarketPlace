@@ -28,8 +28,12 @@ namespace MarketPlaceUI
 
                 if (int.TryParse(userData[0], out int userId) && int.TryParse(userData[2], out int userLevel))
                 {
-                    User.Init(userId, userLogin, userLevel);
+                    decimal balance = await DataAccess.GetUserBalance(userId);
+                    User.Init(userId, userLogin, userLevel, balance);
+                    // TODO - method for labels
                     labelLogin.Text = userLogin;
+                    labelBalance.Text = $"{balance}$";
+                    labelBalance.Left = labelBalance.Parent.Width / 2 - labelBalance.Width / 2;
                 }                
             }            
         }
@@ -80,13 +84,14 @@ namespace MarketPlaceUI
             flowLayoutPanel.AutoSize = true;
             flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
-            // TODO - ownerId
+            // TODO - pageNo
             List<MarketItem> marketItems = await DataAccess.GetMarketItems(1, 20, User.Instance().Id);
 
 
             foreach (MarketItem marketItem in marketItems)
             {
-                Panel panel = new Panel();
+                Panel panel = new Panel();                
+                panel.Tag = marketItem.Id; // for navigation
                 panel.Size = new Size(300, 300);
                 //panel.Visible = false;
 
@@ -287,7 +292,7 @@ namespace MarketPlaceUI
 
         private void buttonAuth_Click(object sender, EventArgs e)
         {
-            AuthForm authForm = new AuthForm(labelLogin);
+            AuthForm authForm = new AuthForm(labelLogin, labelBalance);
             authForm.ShowDialog();
         }
 
@@ -333,7 +338,7 @@ namespace MarketPlaceUI
         {
             if (!User.isLoggedIn)
             {
-                AuthForm authForm = new AuthForm(labelLogin);
+                AuthForm authForm = new AuthForm(labelLogin, labelBalance);
                 authForm.ShowDialog();
             }
 
