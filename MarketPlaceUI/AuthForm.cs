@@ -7,9 +7,11 @@ namespace MarketPlaceUI
 {
     public partial class AuthForm : Form
     {
-        public AuthForm()
+        private Label _labelLogin;
+        public AuthForm(Label labelLogin)
         {
             InitializeComponent();
+            _labelLogin = labelLogin;
         }
 
         private async void buttonRegOk_Click(object sender, EventArgs e)
@@ -81,11 +83,6 @@ namespace MarketPlaceUI
         {
             errorProviderReg.Clear();
 
-            if (checkBoxStayLoggedIn.Checked)
-            {
-                Debug.WriteLine("Stay logged in.");
-            }
-
             if (textBoxAuthUserLogin.Text.Length < 3)
             {
                 errorProviderReg.SetError(textBoxAuthUserLogin, "Hey!");
@@ -109,7 +106,6 @@ namespace MarketPlaceUI
             }
             catch (DbException ex)
             {
-                Debug.WriteLine($"{ex.Message} : {ex.ErrorCode}");
                 switch (ex.ErrorCode)
                 {
                     case -2146232060:
@@ -121,7 +117,6 @@ namespace MarketPlaceUI
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"{ex.Message}");
                 MessageBox.Show("Try another user name.");
                 // TODO - log
             }
@@ -130,8 +125,17 @@ namespace MarketPlaceUI
             {
                 User.LogOut();
 
+                User.Init((int)userId, textBoxAuthUserLogin.Text, (int)userLevel!);
+                _labelLogin.Text = textBoxAuthUserLogin.Text;
+
+                if (checkBoxStayLoggedIn.Checked)
+                {
+                    // TODO - better checkBoxStayLoggedIn
+                    await File.WriteAllLinesAsync("./stay_logged_in.txt", [userId.ToString(), textBoxAuthUserLogin.Text, userLevel.ToString()]);
+                }
+
                 MessageBox.Show("You successfully logged in!");
-                User.Init((int)userId, textBoxAuthUserLogin.Text, (int)userLevel);
+
                 Close();
             }
             else

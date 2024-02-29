@@ -98,7 +98,7 @@ namespace MarketPlaceUI.FormsUI
 
                 if (result == DialogResult.OK)
                 {
-                    int orderId = await DataAccess.OrderAdd(User.Instance().Id, marketItem.Id);
+                    int orderId = await DataAccess.AddItemToOrder(User.Instance().Id, marketItem.Id);
                     
                     await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
                     await DataAccess.SaveHistory(marketItem.OwnerId, User.Instance().Id, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
@@ -113,6 +113,22 @@ namespace MarketPlaceUI.FormsUI
             if (marketItem.BidStep != 0)
             {
                 Button buttonBid = ButtonFactory.BuildButton("buttonBid", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\profits.png");
+
+                buttonBid.Click += async (object sender, EventArgs e) =>
+                {
+                    var result = MessageBox.Show($"Confirm your bid of {Math.Round(marketItem.PriceCurrent + marketItem.BidStep, 2)}$ for {marketItem.Title}$.",
+                    "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+                    if (result == DialogResult.OK)
+                    {
+                        int bidResult = await DataAccess.BidItem(User.Instance().Id, marketItem.Id);
+
+                        await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Bid, marketItem.PriceEnd);
+
+                        MessageBox.Show($"bidResult: {bidResult}.");
+                    }
+                };
+
                 panelControlsRight.Controls.Add(buttonBid);
             }
 

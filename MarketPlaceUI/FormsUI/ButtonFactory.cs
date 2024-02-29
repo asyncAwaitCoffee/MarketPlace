@@ -22,10 +22,6 @@ namespace MarketPlaceUI.FormsUI
             button.Name = name;
             button.Margin = new Padding(1, 0, 1, 0);
 
-            Debug.WriteLine(button.Padding);
-
-            Debug.WriteLine($"imagePath: {imagePath}");
-
             if (imagePath.Length > 0 && File.Exists(imagePath))
             {
                 Image image = Image.FromFile(imagePath);
