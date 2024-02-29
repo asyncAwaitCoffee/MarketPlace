@@ -143,7 +143,8 @@ namespace MarketPlaceUI
 
                 MessageBox.Show("You successfully logged in!");
 
-                Close();
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
             else
             {

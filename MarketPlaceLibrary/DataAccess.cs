@@ -178,7 +178,7 @@ namespace MarketPlaceLibrary
 
         public static async Task<List<MarketItem>> GetMarketItems(
             int pageNo, int pageCount, int userId, byte? itemCategory = null, int? highestBidder = null,
-            bool filterByOwnerId = false, int? orderByPrice = null, int? orderByDate = null
+            bool filterByOwnerId = false, int? orderByPrice = null, int? orderByDate = null, bool? onlyFav = null
             )
         {
             List<MarketItem> marketItems = new List<MarketItem>();
@@ -195,7 +195,8 @@ namespace MarketPlaceLibrary
                     new SqlParameter("@FILTER_BY_HIGHEST_BIDDER", highestBidder),
                     new SqlParameter("@FILTER_BY_OWNER_ID", filterByOwnerId),
                     new SqlParameter("@ORDER_BY_PRICE", orderByPrice),
-                    new SqlParameter("@ORDER_BY_DATE", orderByDate)
+                    new SqlParameter("@ORDER_BY_DATE", orderByDate),
+                    new SqlParameter("@ONLY_FAV", onlyFav)
                     );
 
                 SqlDataReader result = await sqlCommand.ExecuteReaderAsync();
@@ -209,7 +210,8 @@ namespace MarketPlaceLibrary
                                     Math.Round(result.GetDecimal("START_PRICE"), 2),
                                     result.GetByte("ITEM_CATEGORY"),
                                     result.GetDateTime("DATE_START"),
-                                    result.GetInt32("OWNER_ID")
+                                    result.GetInt32("OWNER_ID"),
+                                    result.GetBoolean("IS_FAV")
                                 )
                             {
                                 Description = result.GetString("ITEM_DESCRIPTION"),
@@ -222,6 +224,21 @@ namespace MarketPlaceLibrary
 
             return marketItems;
 
+        }
+
+        public static async Task ToggleItemFavorite(int userId, int itemId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand sqlCommand = await CreateSqlCommand(
+                    connection,
+                    "MARKET_PLACE.ITEM_FAVORITE_TOGGLE",
+                    new SqlParameter("@USER_ID", userId),
+                    new SqlParameter("@ITEM_ID", itemId));
+
+                await sqlCommand.ExecuteNonQueryAsync();
+
+            }
         }
 
         public static async Task<int> AddItemToOrder(int userId, int itemId)
@@ -413,14 +430,14 @@ namespace MarketPlaceLibrary
                 {
                     historyItems.Add(
                             new HistoryItem(
-                                    result.GetInt32("MARKET_USER_ID"),
-                                    result.GetInt32("MARKET_PARTNER_ID"),
-                                    result.GetInt32("MARKET_ITEM_ID"),
+                                    result.GetString("TITLE"),
                                     (int)result.GetByte("OPERATION_TYPE"),
-                                    Math.Round(result.GetDecimal("COST"), 2),
+                                    result.GetDecimal("COST"),
                                     result.GetDateTime("HISTORY_DATE")
                                 )
                             {
+                                PersonName = result.IsDBNull(result.GetOrdinal("PERSON_NAME")) ? "" : result.GetString("PERSON_NAME"),
+                                Email = result.IsDBNull(result.GetOrdinal("EMAIL")) ? "" : result.GetString("EMAIL"),
                                 OrderState = result.IsDBNull(result.GetOrdinal("ORDER_STATE")) ? (byte)0 : result.GetByte("ORDER_STATE")
                             }
                         );

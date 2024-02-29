@@ -2,6 +2,7 @@ using MarketPlaceLibrary;
 using MarketPlaceLibrary.Models;
 using MarketPlaceUI.FormsUI;
 using MarketPlaceUI.Supporting;
+using System.Diagnostics;
 
 namespace MarketPlaceUI
 {
@@ -109,9 +110,9 @@ namespace MarketPlaceUI
             {
                 int? byDate = comboBoxByDate.SelectedIndex == -1 ? null : comboBoxByDate.SelectedIndex;
                 int? byPrice = comboBoxByPrice.SelectedIndex == -1 ? null : comboBoxByPrice.SelectedIndex;
-                bool favs = checkBoxFav.Checked;
+                bool onlyFav = checkBoxFav.Checked;
                 // TODO - pageNo
-                List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(1, 20, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate);
+                List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(1, 20, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate, onlyFav: onlyFav);
 
                 FlowLayoutPanel panelContainer = BuildMarketItemsLayout(marketItemsOrdered);
                 panelContent.Controls.Clear();
@@ -206,11 +207,13 @@ namespace MarketPlaceUI
             //DataGridViewButtonColumn columnEditButton = new DataGridViewButtonColumn();
 
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
             dataGridView.Columns.AddRange([
                 columnTitle, columnCategory, columnPriceStart, columnPriceCurrent, columnPriceEnd,
                 columnBidStep, columnDateStart, columnDateEnd//, columnEditButton
                 ]);
-            dataGridView.Name = "dataGridView1";
+
 
             columnTitle.HeaderText = "Title";
             columnTitle.Name = "columnTitle";
@@ -247,6 +250,7 @@ namespace MarketPlaceUI
                 var row = new DataGridViewRow();
                 row.CreateCells(dataGridView);
 
+
                 row.Tag = myItem.Id;
 
                 row.Cells[0].Value = myItem.Title;
@@ -264,7 +268,7 @@ namespace MarketPlaceUI
 
             panelContent.Controls.Add(dataGridView);
 
-            Button addItemButton = ButtonFactory.BuildButton("addItemButton", ButtonSize.Small, new Point(60, 0), text: "Item");
+            Button addItemButton = ButtonFactory.BuildButton("addItemButton", ButtonSize.Small, new Point(60, 0), text: "Add");
 
             addItemButton.Click += addItemButton_Click;
 
@@ -299,23 +303,28 @@ namespace MarketPlaceUI
             dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridView.Dock = DockStyle.Fill;
 
-            DataGridViewTextBoxColumn columnPartner = new DataGridViewTextBoxColumn();
             DataGridViewTextBoxColumn columnItem = new DataGridViewTextBoxColumn();
             DataGridViewTextBoxColumn columnOperation = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnPartner = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnEmail = new DataGridViewTextBoxColumn();
             DataGridViewTextBoxColumn columnDate = new DataGridViewTextBoxColumn();
 
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
             dataGridView.Columns.AddRange([
-                columnPartner, columnItem, columnOperation, columnDate
+                columnItem, columnOperation, columnPartner, columnEmail, columnDate
                 ]);
             dataGridView.Name = "dataGridView1";
 
-            columnPartner.HeaderText = "Partner";
-            columnPartner.Name = "columnPartner";
             columnItem.HeaderText = "Item";
             columnItem.Name = "columnItem";
             columnOperation.HeaderText = "Operation";
             columnOperation.Name = "columnOperation";
+            columnPartner.HeaderText = "Partner";
+            columnPartner.Name = "columnPartner";
+            columnEmail.HeaderText = "Email";
+            columnEmail.Name = "columnEmail";
             columnDate.HeaderText = "Date";
             columnDate.Name = "columnDate";
 
@@ -339,10 +348,13 @@ namespace MarketPlaceUI
                         break;
                 }
 
-                row.Cells[0].Value = myHistoryItem.PartnerId;
-                row.Cells[1].Value = myHistoryItem.MarketItemId;
-                row.Cells[2].Value = myHistoryItem.OperationType;
-                row.Cells[3].Value = myHistoryItem.HistoryDate;
+                string operationString = Enum.GetName(typeof(OperationType), myHistoryItem.OperationType);
+
+                row.Cells[0].Value = myHistoryItem.Title;
+                row.Cells[1].Value = operationString;
+                row.Cells[2].Value = myHistoryItem.PersonName;
+                row.Cells[3].Value = myHistoryItem.Email;
+                row.Cells[4].Value = myHistoryItem.HistoryDate;
 
                 dataGridView.Rows.Add(row);
             }
@@ -353,7 +365,12 @@ namespace MarketPlaceUI
         private void buttonAuth_Click(object sender, EventArgs e)
         {
             AuthForm authForm = new AuthForm(labelLogin, labelBalance);
-            authForm.ShowDialog();
+            DialogResult dialogResult = authForm.ShowDialog();
+
+            if (dialogResult == DialogResult.OK)
+            {
+                buttonMenuMain.PerformClick();
+            }
         }
 
 
@@ -403,6 +420,12 @@ namespace MarketPlaceUI
             }
 
             return User.isLoggedIn;
+        }
+
+        private void buttonMails_Click(object sender, EventArgs e)
+        {
+            EmailForm emailForm = new EmailForm();
+            emailForm.ShowDialog();
         }
     }
 }
