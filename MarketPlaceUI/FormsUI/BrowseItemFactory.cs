@@ -1,11 +1,171 @@
 ﻿using MarketPlaceLibrary;
 using MarketPlaceLibrary.Models;
 using MarketPlaceUI.Supporting;
+using System.Security.Policy;
 
 namespace MarketPlaceUI.FormsUI
 {
     internal static class BrowseItemFactory
     {
+        public static TableLayoutPanel BuildItemContainer(MarketItem marketItem)
+        {
+            TableLayoutPanel itemContainer = BrowseItemFactory.BuildItemContainer();
+
+            PictureBox itemPictureBox = BrowseItemFactory.buildItemPictureBox(marketItem);
+            Task.Run(() => { itemPictureBox.Image = LoadImageAsync(marketItem.Id).Result; }); // TODO - revise ??
+
+            TextBox itemTextBox = BrowseItemFactory.BuildItemDescriptionBox(marketItem);
+
+            TableLayoutPanel itemControlsContainer = BrowseItemFactory.BuildItemControlsContainer();
+
+            FlowLayoutPanel itemButtonsGroupLeft = BrowseItemFactory.BuildItemButtonsContainer();
+            Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", ButtonSize.Tiny, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\question.png");
+            buttonInfo.Click += (object sender, EventArgs e) => {
+                ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog();
+            };
+
+            string star = marketItem.IsFav ? "star.png" : "star_no.png";
+            Button buttonFav = ButtonFactory.BuildButton("buttonFav", ButtonSize.Tiny, new Point(0, 0), imagePath: @$"D:\Programming\projects\MarketPlace\Assets\{star}");
+            buttonFav.Click += async (object sender, EventArgs e) =>
+            {
+                await DataAccess.ToggleItemFavorite(User.Instance().Id, marketItem.Id);
+            };
+
+            itemButtonsGroupLeft.Controls.AddRange([buttonInfo, buttonFav]);
+
+            FlowLayoutPanel itemButtonsGroupRight = BrowseItemFactory.BuildItemButtonsContainer(FlowDirection.RightToLeft);
+            Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\salary.png");
+            buttonBuy.Click += async (object sender, EventArgs e) =>
+            {
+                var result = MessageBox.Show($"Confirm your purchase of {marketItem.Title} for {marketItem.PriceStart}$.",
+                    "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+                if (result == DialogResult.OK)
+                {
+                    int orderId = await DataAccess.AddItemToOrder(User.Instance().Id, marketItem.Id);
+
+                    FormMethods.RemoveControlByGrandChild(itemContainer);
+
+                    await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
+                    await DataAccess.SaveHistory(marketItem.OwnerId, User.Instance().Id, marketItem.Id, (int)OperationType.Buy, marketItem.PriceEnd);
+
+                    MessageBox.Show($"Order #{orderId} registered.");
+                }
+            };
+
+            itemButtonsGroupRight.Controls.Add(buttonBuy);
+
+
+            if (marketItem.BidStep != 0)
+            {
+                Button buttonBid = ButtonFactory.BuildButton("buttonBid", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\profits.png");
+
+                buttonBid.Click += async (object sender, EventArgs e) =>
+                {
+                    var result = MessageBox.Show($"Confirm your bid of {Math.Round(marketItem.PriceCurrent + marketItem.BidStep, 2)}$ for {marketItem.Title}$.",
+                    "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+                    if (result == DialogResult.OK)
+                    {
+                        int bidResult = await DataAccess.BidItem(User.Instance().Id, marketItem.Id);
+
+                        switch (bidResult)
+                        {
+                            case 0:
+                                // todo string possibleReason = "";
+                                MessageBox.Show($"Unable to bid.");
+                                break;
+                            case 1:
+                                MessageBox.Show("Bid is successful.");
+                                FormMethods.RemoveControlByGrandChild(itemContainer);
+                                break;
+                            case 2:
+                                MessageBox.Show($"Congratulations! You baught {marketItem.Title}");
+                                break;
+                            default:
+                                MessageBox.Show($"Unhandled code: {bidResult}.");
+                                break;
+                        }
+
+                        await DataAccess.SaveHistory(User.Instance().Id, marketItem.OwnerId, marketItem.Id, (int)OperationType.Bid, marketItem.PriceEnd);
+                    }
+                };
+
+                itemButtonsGroupRight.Controls.Add(buttonBid);
+            }
+
+            itemControlsContainer.Controls.Add(itemButtonsGroupLeft, 0, 0);
+            itemControlsContainer.Controls.Add(itemButtonsGroupRight, 1, 0);
+
+            itemContainer.Controls.Add(itemPictureBox);
+            itemContainer.Controls.Add(itemTextBox);
+            itemContainer.Controls.Add(itemControlsContainer);
+
+            return itemContainer;
+        }
+        public static Control[] BuildHeaderControls(Panel panelContent)
+        {
+            Label labelByDate = new Label();
+            labelByDate.Text = "by date:";
+            labelByDate.AutoSize = true;
+            labelByDate.Margin = new Padding(5, 9, 0, 0);
+
+            ComboBox comboBoxByDate = new ComboBox();
+            comboBoxByDate.Items.Add("asc");
+            comboBoxByDate.Items.Add("desc");
+            comboBoxByDate.Width = 60;
+            comboBoxByDate.Margin = new Padding(5, 6, 0, 0);
+            comboBoxByDate.KeyPress += (object sender, KeyPressEventArgs e) => { e.Handled = true; };
+
+            Label labelByPrice = new Label();
+            labelByPrice.Text = "by price:";
+            labelByPrice.AutoSize = true;
+            labelByPrice.Margin = new Padding(5, 9, 0, 0);
+
+            ComboBox comboBoxByPrice = new ComboBox();
+            comboBoxByPrice.Items.Add("asc");
+            comboBoxByPrice.Items.Add("desc");
+            comboBoxByPrice.Width = 60;
+            comboBoxByPrice.Margin = new Padding(5, 6, 0, 0);
+            comboBoxByPrice.KeyPress += (object sender, KeyPressEventArgs e) => { e.Handled = true; };
+
+            CheckBox checkBoxFav = new CheckBox();
+            checkBoxFav.Text = "Favorite";
+            checkBoxFav.Margin = new Padding(15, 9, 0, 0);
+
+            Button buttonOrder = ButtonFactory.BuildButton("buttonOrder", ButtonSize.Small, new Point(5, 5), text: "Order");
+            buttonOrder.Click += async (object sender, EventArgs e) =>
+            {
+                panelContent.Controls.Clear();
+
+                int? byDate = comboBoxByDate.SelectedIndex == -1 ? null : comboBoxByDate.SelectedIndex;
+                int? byPrice = comboBoxByPrice.SelectedIndex == -1 ? null : comboBoxByPrice.SelectedIndex;
+                bool onlyFav = checkBoxFav.Checked;
+                // TODO - pageNo
+                List<MarketItem> marketItemsOrdered = await DataAccess.GetMarketItems(1, 20, User.Instance().Id, orderByPrice: byPrice, orderByDate: byDate, onlyFav: onlyFav);
+                FlowLayoutPanel panelAllItemsContainer = BrowseItemFactory.BuildAllItemsContainer();
+                foreach (var item in marketItemsOrdered)
+                {
+                    panelAllItemsContainer.Controls.Add(BuildItemContainer(item));
+                }
+                panelContent.Controls.Add(panelAllItemsContainer);
+            };
+
+            return [buttonOrder, labelByDate, comboBoxByDate, labelByPrice, comboBoxByPrice, checkBoxFav];
+        }
+        public static FlowLayoutPanel BuildAllItemsContainer()
+        {
+            FlowLayoutPanel panelAllItemsContainer = new FlowLayoutPanel();
+
+            panelAllItemsContainer.Location = new Point(0, 0);
+            panelAllItemsContainer.Dock = DockStyle.Fill;
+            panelAllItemsContainer.Visible = true;
+            panelAllItemsContainer.AutoScroll = true;
+            panelAllItemsContainer.AutoSize = true;
+            panelAllItemsContainer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            return panelAllItemsContainer;
+        }
         public static TableLayoutPanel BuildItemContainer()
         {
             TableLayoutPanel itemContainer = new TableLayoutPanel();
@@ -83,6 +243,32 @@ namespace MarketPlaceUI.FormsUI
             ItemButtonsContainer.FlowDirection = flowDirection;
 
             return ItemButtonsContainer;
+        }
+
+        public static async Task<Image> LoadImageAsync(int itemId)
+        {
+            byte[] imageData = await DataAccess.RetrieveImageFromDatabase(itemId);
+
+            TaskCompletionSource<Image> tcs = new TaskCompletionSource<Image>();
+
+            if (imageData == null)
+            {
+                Image image = Image.FromFile(@"D:\Programming\projects\MarketPlace\Assets\NO_IMAGE.png");
+                tcs.SetResult(image);
+            }
+
+            else
+            {
+                await Task.Run(() =>
+                {
+                    using (MemoryStream ms = new MemoryStream(imageData))
+                    {
+                        tcs.SetResult(Image.FromStream(ms));
+                    }
+                });
+            }
+
+            return await tcs.Task;
         }
     }
 }
