@@ -18,12 +18,13 @@ namespace MarketPlaceLibrary.Models
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public int OwnerId { get; set; }
+        public bool IsFav { get; set; }
 
         public string Description { get; set; }
         public decimal BidStep { get; set; }
 
         // Constructor
-        public MarketItem(int id, string title, decimal startPrice, byte category, DateTime dateStart, int ownerId)
+        public MarketItem(int id, string title, decimal startPrice, byte category, DateTime dateStart, int ownerId, bool isFav)
         {
             Id = id;
             Title = title;
@@ -31,6 +32,7 @@ namespace MarketPlaceLibrary.Models
             Category = category;
             DateStart = dateStart;
             OwnerId = ownerId;
+            IsFav = isFav;
         }
     }
 }

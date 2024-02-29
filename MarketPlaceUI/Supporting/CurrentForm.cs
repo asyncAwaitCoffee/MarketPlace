@@ -17,7 +17,7 @@ namespace MarketPlaceUI.Supporting
     {
         Buy,
         Bid,
-        Place,
+        Post,
         Sell
     }
 }

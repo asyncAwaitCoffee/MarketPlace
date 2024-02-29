@@ -74,8 +74,15 @@ namespace MarketPlaceUI.FormsUI
             panelControlsLeft.FlowDirection = FlowDirection.LeftToRight;
 
             Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", ButtonSize.Tiny, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\question.png");
-            Button buttonFav = ButtonFactory.BuildButton("buttonFav", ButtonSize.Tiny, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\star.png");
 
+            string star = marketItem.IsFav ? "star.png" : "star_no.png";
+            Button buttonFav = ButtonFactory.BuildButton("buttonFav", ButtonSize.Tiny, new Point(0, 0), imagePath: @$"D:\Programming\projects\MarketPlace\Assets\{star}");
+
+
+            buttonFav.Click += async (object sender, EventArgs e) =>
+            {
+                 await DataAccess.ToggleItemFavorite(User.Instance().Id, marketItem.Id);
+            };
 
             buttonInfo.Click += (object sender, EventArgs e) => { ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog(); };
 

@@ -138,7 +138,7 @@ namespace MarketPlaceUI
                         await DataAccess.SaveImageToDatabase(itemId, imagePath);
                     }
 
-                    await DataAccess.SaveHistory(User.Instance().Id, User.Instance().Id, itemId, (int)OperationType.Place, decimal.Parse(textBoxItemPriceStart.Text));
+                    await DataAccess.SaveHistory(User.Instance().Id, User.Instance().Id, itemId, (int)OperationType.Post, decimal.Parse(textBoxItemPriceStart.Text));
 
                     Close();
                     
