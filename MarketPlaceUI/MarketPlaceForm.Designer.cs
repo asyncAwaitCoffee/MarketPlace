@@ -48,9 +48,10 @@
             panelHeaderStyle2 = new Panel();
             flowLayoutPanelHeaderControls = new FlowLayoutPanel();
             buttonMails = new Button();
-            imageList = new ImageList(components);
+            imageListEmail = new ImageList(components);
             panelContent = new Panel();
             panelLeftMenuDock = new Panel();
+            imageListBrowse = new ImageList(components);
             panelMenuLeft.SuspendLayout();
             panelAccountInfo.SuspendLayout();
             panelHeader.SuspendLayout();
@@ -283,7 +284,7 @@
             buttonMails.FlatAppearance.BorderSize = 0;
             buttonMails.FlatStyle = FlatStyle.Flat;
             buttonMails.ImageIndex = 0;
-            buttonMails.ImageList = imageList;
+            buttonMails.ImageList = imageListEmail;
             buttonMails.Location = new Point(819, 5);
             buttonMails.Margin = new Padding(0);
             buttonMails.Name = "buttonMails";
@@ -292,13 +293,13 @@
             buttonMails.UseVisualStyleBackColor = true;
             buttonMails.Click += buttonMails_Click;
             // 
-            // imageList
+            // imageListEmail
             // 
-            imageList.ColorDepth = ColorDepth.Depth32Bit;
-            imageList.ImageStream = (ImageListStreamer)resources.GetObject("imageList.ImageStream");
-            imageList.TransparentColor = Color.Transparent;
-            imageList.Images.SetKeyName(0, "email.png");
-            imageList.Images.SetKeyName(1, "email_new.png");
+            imageListEmail.ColorDepth = ColorDepth.Depth32Bit;
+            imageListEmail.ImageStream = (ImageListStreamer)resources.GetObject("imageListEmail.ImageStream");
+            imageListEmail.TransparentColor = Color.Transparent;
+            imageListEmail.Images.SetKeyName(0, "email.png");
+            imageListEmail.Images.SetKeyName(1, "email_new.png");
             // 
             // panelContent
             // 
@@ -318,6 +319,17 @@
             panelLeftMenuDock.Name = "panelLeftMenuDock";
             panelLeftMenuDock.Size = new Size(219, 559);
             panelLeftMenuDock.TabIndex = 0;
+            // 
+            // imageListBrowse
+            // 
+            imageListBrowse.ColorDepth = ColorDepth.Depth32Bit;
+            imageListBrowse.ImageStream = (ImageListStreamer)resources.GetObject("imageListBrowse.ImageStream");
+            imageListBrowse.TransparentColor = Color.Transparent;
+            imageListBrowse.Images.SetKeyName(0, "question.png");
+            imageListBrowse.Images.SetKeyName(1, "star.png");
+            imageListBrowse.Images.SetKeyName(2, "star_no.png");
+            imageListBrowse.Images.SetKeyName(3, "profits.png");
+            imageListBrowse.Images.SetKeyName(4, "salary.png");
             // 
             // MarketPlaceForm
             // 
@@ -356,7 +368,7 @@
         private Button buttonAuth;
         private FlowLayoutPanel flowLayoutPanelHeaderControls;
         private Button buttonAccount;
-        private ImageList imageList;
+        private ImageList imageListEmail;
         private Label labelLogin;
         private Label labelBalance;
         private Panel panelHeaderStyle2;
@@ -365,5 +377,6 @@
         private Panel panelHeaderStyle6;
         private Panel panelHeaderStyle5;
         private Panel panelHeaderStyle4;
+        private ImageList imageListBrowse;
     }
 }

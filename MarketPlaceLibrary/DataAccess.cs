@@ -1,6 +1,8 @@
 ﻿using MarketPlaceLibrary.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Data.Common;
+using System.Diagnostics;
 using System.Text;
 
 namespace MarketPlaceLibrary
@@ -226,19 +228,31 @@ namespace MarketPlaceLibrary
 
         }
 
-        public static async Task ToggleItemFavorite(int userId, int itemId)
+        public static async Task<byte> ToggleItemFavorite(int userId, int itemId)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            byte result = 0;
+            try
             {
-                SqlCommand sqlCommand = await CreateSqlCommand(
-                    connection,
-                    "MARKET_PLACE.ITEM_FAVORITE_TOGGLE",
-                    new SqlParameter("@USER_ID", userId),
-                    new SqlParameter("@ITEM_ID", itemId));
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand sqlCommand = await CreateSqlCommand(
+                        connection,
+                        "MARKET_PLACE.ITEM_FAVORITE_TOGGLE",
+                        new SqlParameter("@USER_ID", userId),
+                        new SqlParameter("@ITEM_ID", itemId));
 
-                await sqlCommand.ExecuteNonQueryAsync();
+                    await sqlCommand.ExecuteNonQueryAsync();
 
+                    result = 1;
+                }
             }
+            catch (DbException ex)
+            {
+                // TODO - Error loggin
+                Debug.WriteLine(ex.Message);
+            }            
+
+            return result;
         }
 
         public static async Task<int> AddItemToOrder(int userId, int itemId)

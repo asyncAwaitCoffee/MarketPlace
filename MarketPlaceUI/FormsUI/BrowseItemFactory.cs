@@ -8,6 +8,7 @@ namespace MarketPlaceUI.FormsUI
 {
     internal static class BrowseItemFactory
     {
+        public static ImageList imageListBrowse { get; set; }
         public static TableLayoutPanel BuildItemContainer(MarketItem marketItem)
         {
             TableLayoutPanel itemContainer = BuildItemContainer();
@@ -20,22 +21,39 @@ namespace MarketPlaceUI.FormsUI
             TableLayoutPanel itemControlsContainer = BuildItemControlsContainer();
 
             FlowLayoutPanel itemButtonsGroupLeft = BuildItemButtonsContainer();
-            Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", ButtonSize.Tiny, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\question.png");
+            Button buttonInfo = ButtonFactory.BuildButton("buttonInfo", ButtonSize.Tiny, new Point(0, 0));
+            buttonInfo.ImageList = imageListBrowse;
+            buttonInfo.ImageIndex = 0;
+
             buttonInfo.Click += (object sender, EventArgs e) => {
                 ItemInfoForm itemInfoForm = new ItemInfoForm(); itemInfoForm.ShowDialog();
             };
 
-            string star = marketItem.IsFav ? "star.png" : "star_no.png";
-            Button buttonFav = ButtonFactory.BuildButton("buttonFav", ButtonSize.Tiny, new Point(0, 0), imagePath: @$"D:\Programming\projects\MarketPlace\Assets\{star}");
+            Button buttonFav = ButtonFactory.BuildButton("buttonFav", ButtonSize.Tiny, new Point(0, 0));
+            buttonFav.ImageList = imageListBrowse;
+            int star = marketItem.IsFav ? 2 : 1;
+            buttonFav.ImageIndex = star;
+
             buttonFav.Click += async (object sender, EventArgs e) =>
             {
-                await DataAccess.ToggleItemFavorite(User.Instance().Id, marketItem.Id);
+                byte result = await DataAccess.ToggleItemFavorite(User.Instance().Id, marketItem.Id);
+                if (result == 1)
+                {
+                    // TODO - refactor to get image from imageList
+                    marketItem.IsFav = !marketItem.IsFav;
+                    int star = marketItem.IsFav ? 2 : 1;
+                    buttonFav.ImageIndex = star;
+
+                }
             };
 
             itemButtonsGroupLeft.Controls.AddRange([buttonInfo, buttonFav]);
 
             FlowLayoutPanel itemButtonsGroupRight = BuildItemButtonsContainer(FlowDirection.RightToLeft);
-            Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\salary.png");
+            Button buttonBuy = ButtonFactory.BuildButton("buttonBuy", ButtonSize.Small, new Point(0, 0));
+            buttonBuy.ImageList = imageListBrowse;
+            buttonBuy.ImageIndex = 4;
+
             buttonBuy.Click += async (object sender, EventArgs e) =>
             {
                 var result = MessageBox.Show($"Confirm your purchase of {marketItem.Title} for {marketItem.PriceStart}$.",
@@ -59,7 +77,9 @@ namespace MarketPlaceUI.FormsUI
 
             if (marketItem.BidStep != 0)
             {
-                Button buttonBid = ButtonFactory.BuildButton("buttonBid", ButtonSize.Small, new Point(0, 0), imagePath: @"D:\Programming\projects\MarketPlace\Assets\profits.png");
+                Button buttonBid = ButtonFactory.BuildButton("buttonBid", ButtonSize.Small, new Point(0, 0));
+                buttonBid.ImageList = imageListBrowse;
+                buttonBid.ImageIndex = 3;
 
                 buttonBid.Click += async (object sender, EventArgs e) =>
                 {
