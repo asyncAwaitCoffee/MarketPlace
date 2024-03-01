@@ -16,6 +16,8 @@ namespace MarketPlaceUI
             TryLoggedInAsSaved();
 
             this.Load += (object sender, EventArgs e) => buttonMenuMain.PerformClick();
+
+            BrowseItemFactory.imageListBrowse = imageListBrowse;
         }
 
         private async void TryLoggedInAsSaved()
@@ -96,10 +98,15 @@ namespace MarketPlaceUI
 
             FlowLayoutPanel panelAllItemsContainer = BrowseItemFactory.BuildAllItemsContainer();
 
+            // TODO - layout issue
+            panelAllItemsContainer.SuspendLayout();
+
             foreach (var item in marketItems)
             {
                 panelAllItemsContainer.Controls.Add(BrowseItemFactory.BuildItemContainer(item));
             }
+
+            panelAllItemsContainer.ResumeLayout();
 
             panelContent.Controls.Add(panelAllItemsContainer);           
         }

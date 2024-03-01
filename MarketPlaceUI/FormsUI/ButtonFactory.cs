@@ -10,7 +10,7 @@ namespace MarketPlaceUI.FormsUI
     internal static class ButtonFactory
     {
         // TODO - impl
-        public static Button BuildButton(string name, ButtonSize buttonSize, Point location, string text = "", DockStyle dockStyle = DockStyle.None, string imagePath = @"")
+        public static Button BuildButton(string name, ButtonSize buttonSize, Point location, string text = "", DockStyle dockStyle = DockStyle.None)
         {
             Button button = new Button();
 
@@ -22,14 +22,6 @@ namespace MarketPlaceUI.FormsUI
             button.Name = name;
             button.Margin = new Padding(1, 0, 1, 0);
 
-            if (imagePath.Length > 0 && File.Exists(imagePath))
-            {
-                Image image = Image.FromFile(imagePath);
-
-                button.BackgroundImage = new Bitmap(image, 30, 30);
-                button.BackgroundImageLayout = ImageLayout.Center;
-                //button.Image = Image.FromFile(imagePath);                
-            }
 
             (Size size, float fontSize) = buttonSize switch
             {
