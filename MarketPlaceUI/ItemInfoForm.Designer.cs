@@ -38,7 +38,7 @@
             ClientSize = new Size(394, 328);
             Name = "ItemInfoForm";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "ItemInfoForm";
+            Text = "Item Information";
             ResumeLayout(false);
         }
 

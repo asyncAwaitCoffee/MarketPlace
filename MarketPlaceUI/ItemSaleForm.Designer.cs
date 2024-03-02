@@ -179,7 +179,7 @@
             Margin = new Padding(5);
             Name = "ItemSaleForm";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "AddItemForm";
+            Text = "Add Item";
             groupBoxItemDetails.ResumeLayout(false);
             groupBoxItemDetails.PerformLayout();
             groupBoxItemPrice.ResumeLayout(false);
