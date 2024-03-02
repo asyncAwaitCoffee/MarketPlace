@@ -5,11 +5,11 @@ using System.Diagnostics;
 
 namespace MarketPlaceUI
 {
-    public partial class AuthForm : Form
+    public partial class AuthorizationForm : Form
     {
         private Label _labelLogin;
         private Label _labelBalance;
-        public AuthForm(Label labelLogin, Label labelBalance)
+        public AuthorizationForm(Label labelLogin, Label labelBalance)
         {
             InitializeComponent();
             _labelLogin = labelLogin;

@@ -302,7 +302,7 @@ namespace MarketPlaceUI
 
         private void buttonAuth_Click(object sender, EventArgs e)
         {
-            AuthForm authForm = new AuthForm(labelLogin, labelBalance);
+            AuthorizationForm authForm = new AuthorizationForm(labelLogin, labelBalance);
             DialogResult dialogResult = authForm.ShowDialog();
 
             if (dialogResult == DialogResult.OK)
@@ -354,7 +354,7 @@ namespace MarketPlaceUI
         {
             if (!User.isLoggedIn)
             {
-                AuthForm authForm = new AuthForm(labelLogin, labelBalance);
+                AuthorizationForm authForm = new AuthorizationForm(labelLogin, labelBalance);
                 authForm.ShowDialog();
             }
 

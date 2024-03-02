@@ -84,7 +84,7 @@
             Margin = new Padding(5);
             Name = "AccountForm";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "AccountForm";
+            Text = "Account";
             ((System.ComponentModel.ISupportInitialize)errorProviderAccount).EndInit();
             ResumeLayout(false);
             PerformLayout();

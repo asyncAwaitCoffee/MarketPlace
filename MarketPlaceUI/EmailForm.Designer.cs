@@ -39,7 +39,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "EmailForm";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "EmailForm";
+            Text = "Email";
             ResumeLayout(false);
         }
 

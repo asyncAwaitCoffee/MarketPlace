@@ -1,6 +1,6 @@
 ﻿namespace MarketPlaceUI
 {
-    partial class AuthForm
+    partial class AuthorizationForm
     {
         /// <summary>
         /// Required designer variable.
@@ -135,10 +135,10 @@
             tabPage2.Controls.Add(textBoxRegUserLogin);
             tabPage2.Controls.Add(textBoxRegUserPassword);
             tabPage2.Controls.Add(buttonRegOk);
-            tabPage2.Location = new Point(4, 34);
+            tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(344, 235);
+            tabPage2.Size = new Size(344, 245);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Registration";
             tabPage2.UseVisualStyleBackColor = true;
@@ -189,7 +189,7 @@
             errorProviderReg.BlinkStyle = ErrorBlinkStyle.NeverBlink;
             errorProviderReg.ContainerControl = this;
             // 
-            // AuthForm
+            // AuthorizationForm
             // 
             AutoScaleDimensions = new SizeF(11F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -199,9 +199,9 @@
             Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Margin = new Padding(5);
-            Name = "AuthForm";
+            Name = "AuthorizationForm";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "AuthForm";
+            Text = "Authorization";
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
